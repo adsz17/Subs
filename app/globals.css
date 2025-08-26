@@ -1,0 +1,8 @@
+:root { --bg: #0b0b0c; --fg: #f5f5f5; }
+html, body { background: var(--bg); color: var(--fg); }
+a { text-decoration: underline; }
+input, select, button { color: black; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #333; padding: 8px; text-align: left; }
+.container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+.btn { background: white; color: black; padding: 8px 12px; border-radius: 6px; display: inline-block; }

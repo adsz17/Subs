@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: servicios-saas
+    env: node
+    plan: free
+    buildCommand: "npm ci && npm run build"
+    startCommand: "npm run start"
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: NEXTAUTH_URL
+        value: https://servicios-saas.onrender.com
+      - key: PUBLIC_BASE_URL
+        value: https://servicios-saas.onrender.com
+databases:
+  - name: servicios-saas-db
+    plan: free
