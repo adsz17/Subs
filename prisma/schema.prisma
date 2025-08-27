@@ -39,23 +39,23 @@ enum WebhookStatus {
 }
 
 model User {
-  id           String    @id @default(cuid())
+  id           String     @id @default(cuid())
   name         String?
-  email        String    @unique
+  email        String     @unique
   passwordHash String?
-  role         Role      @default(CUSTOMER)
+  role         Role       @default(CUSTOMER)
   accounts     Account[]
   sessions     Session[]
   orders       Order[]
   auditLogs    AuditLog[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Account {
-  id                String @id @default(cuid())
+  id                String  @id @default(cuid())
   userId            String
-  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   type              String
   provider          String
   providerAccountId String
@@ -79,55 +79,56 @@ model Session {
 }
 
 model Service {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String      @id @default(cuid())
+  slug        String      @unique
   name        String
   description String?
   imageUrl    String?
-  isActive    Boolean  @default(true)
+  isActive    Boolean     @default(true)
   prices      Price[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Price {
-  id             String   @id @default(cuid())
-  service        Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  serviceId      String
-  currency       String
-  amountCents    Int
-  activeFrom     DateTime
-  activeTo       DateTime?
-  isCurrent      Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id          String    @id @default(cuid())
+  service     Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  serviceId   String
+  currency    String
+  amountCents Int
+  activeFrom  DateTime
+  activeTo    DateTime?
+  isCurrent   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Coupon {
-  id               String   @id @default(cuid())
-  code             String   @unique
+  id               String    @id @default(cuid())
+  code             String    @unique
   percentage       Int?
   amountOffCents   Int?
   validFrom        DateTime
   validTo          DateTime?
   maxRedemptions   Int?
-  redemptionsCount Int      @default(0)
+  redemptionsCount Int       @default(0)
 }
 
 model Order {
-  id            String       @id @default(cuid())
-  user          User?        @relation(fields: [userId], references: [id])
+  id            String      @id @default(cuid())
+  user          User?       @relation(fields: [userId], references: [id])
   userId        String?
   email         String
-  status        OrderStatus  @default(PENDING)
+  status        OrderStatus @default(PENDING)
   subtotalCents Int
-  discountCents Int          @default(0)
+  discountCents Int         @default(0)
   totalCents    Int
   currency      String
   items         OrderItem[]
   payments      Payment[]
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model OrderItem {
@@ -156,15 +157,15 @@ model Payment {
 }
 
 model WebhookEvent {
-  id           String         @id @default(cuid())
+  id           String          @id @default(cuid())
   provider     PaymentProvider
   eventId      String
   signature    String?
   payload      Json
   processedAt  DateTime?
-  status       WebhookStatus  @default(RECEIVED)
+  status       WebhookStatus   @default(RECEIVED)
   errorMessage String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime        @default(now())
 }
 
 model AuditLog {
@@ -179,10 +180,10 @@ model AuditLog {
 }
 
 model Setting {
-  id             Int             @id @default(1)
-  defaultCurrency String         @default("USD")
+  id              Int             @id @default(1)
+  defaultCurrency String          @default("USD")
   paymentProvider PaymentProvider @default(COINBASE)
-  companyName    String?
-  companyEmail   String?
-  publicUrl      String?
+  companyName     String?
+  companyEmail    String?
+  publicUrl       String?
 }
