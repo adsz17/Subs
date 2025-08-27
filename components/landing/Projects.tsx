@@ -13,7 +13,7 @@ export function Projects() {
       <h2 className="mb-8 text-center text-3xl font-bold">Proyectos</h2>
       <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
         {projects.map(p => (
-          <Card key={p.title} className="overflow-hidden bg-white/5">
+          <Card key={p.title} className="overflow-hidden">
             <Image src={p.image} alt={p.title} width={600} height={400} className="h-40 w-full object-cover" />
             <CardContent className="p-4">
               <p>{p.title}</p>

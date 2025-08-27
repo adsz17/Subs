@@ -13,7 +13,7 @@ export function Pricing() {
       <h2 className="mb-8 text-center text-3xl font-bold">Precios</h2>
       <div className="grid gap-8 md:grid-cols-3">
         {plans.map(p => (
-          <Card key={p.name} className="bg-white/5 text-center">
+          <Card key={p.name} className="text-center">
             <CardHeader>
               <CardTitle>{p.name}</CardTitle>
             </CardHeader>
