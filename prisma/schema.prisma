@@ -13,14 +13,69 @@ enum Role {
   CUSTOMER
 }
 
+enum OrderStatus {
+  PENDING
+  REQUIRES_PAYMENT
+  PAID
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  COINBASE
+  STRIPE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum WebhookStatus {
+  RECEIVED
+  PROCESSED
+  ERROR
+}
+
 model User {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   name         String?
-  email        String   @unique
-  passwordHash String
-  role         Role     @default(CUSTOMER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  email        String    @unique
+  passwordHash String?
+  role         Role      @default(CUSTOMER)
+  accounts     Account[]
+  sessions     Session[]
+  orders       Order[]
+  auditLogs    AuditLog[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Account {
+  id                String @id @default(cuid())
+  userId            String
+  user              User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @map("refresh_token")
+  access_token      String? @map("access_token")
+  expires_at        Int?    @map("expires_at")
+  token_type        String? @map("token_type")
+  scope             String?
+  id_token          String? @map("id_token")
+  session_state     String? @map("session_state")
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
 }
 
 model Service {
@@ -37,7 +92,7 @@ model Service {
 
 model Price {
   id             String   @id @default(cuid())
-  service        Service  @relation(fields: [serviceId], references: [id])
+  service        Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   serviceId      String
   currency       String
   amountCents    Int
@@ -48,12 +103,86 @@ model Price {
   updatedAt      DateTime @updatedAt
 }
 
+model Coupon {
+  id               String   @id @default(cuid())
+  code             String   @unique
+  percentage       Int?
+  amountOffCents   Int?
+  validFrom        DateTime
+  validTo          DateTime?
+  maxRedemptions   Int?
+  redemptionsCount Int      @default(0)
+}
+
+model Order {
+  id            String       @id @default(cuid())
+  user          User?        @relation(fields: [userId], references: [id])
+  userId        String?
+  email         String
+  status        OrderStatus  @default(PENDING)
+  subtotalCents Int
+  discountCents Int          @default(0)
+  totalCents    Int
+  currency      String
+  items         OrderItem[]
+  payments      Payment[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model OrderItem {
+  id              String  @id @default(cuid())
+  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId         String
+  service         Service @relation(fields: [serviceId], references: [id])
+  serviceId       String
+  unitAmountCents Int
+  quantity        Int     @default(1)
+  currency        String
+}
+
+model Payment {
+  id          String          @id @default(cuid())
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+  provider    PaymentProvider
+  providerRef String
+  status      PaymentStatus   @default(PENDING)
+  amountCents Int
+  currency    String
+  rawPayload  Json?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model WebhookEvent {
+  id           String         @id @default(cuid())
+  provider     PaymentProvider
+  eventId      String
+  signature    String?
+  payload      Json
+  processedAt  DateTime?
+  status       WebhookStatus  @default(RECEIVED)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+}
+
 model AuditLog {
   id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id])
   userId    String?
   action    String
   entity    String
   entityId  String?
   diff      Json?
   createdAt DateTime @default(now())
+}
+
+model Setting {
+  id             Int             @id @default(1)
+  defaultCurrency String         @default("USD")
+  paymentProvider PaymentProvider @default(COINBASE)
+  companyName    String?
+  companyEmail   String?
+  publicUrl      String?
 }
