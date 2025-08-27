@@ -5,6 +5,7 @@ export default async function CambiarPrecio({ params }: { params: { serviceId: s
   const s = await prisma.service.findUnique({ where: { id: params.serviceId }, include: { prices: { where: { isCurrent: true } } } });
   if (!s) return notFound();
   const current = s.prices[0];
+  const serviceId = s.id;
 
   async function change(formData: FormData) {
     'use server';
@@ -12,13 +13,13 @@ export default async function CambiarPrecio({ params }: { params: { serviceId: s
     const amount = Number(formData.get('amount') || 0);
     const now = new Date();
 
-    const prev = await prisma.price.findFirst({ where: { serviceId: s.id, isCurrent: true } });
+    const prev = await prisma.price.findFirst({ where: { serviceId, isCurrent: true } });
     if (prev) {
       await prisma.price.update({ where: { id: prev.id }, data: { isCurrent: false, activeTo: now } });
     }
     await prisma.price.create({
       data: {
-        serviceId: s.id,
+        serviceId,
         currency,
         amountCents: Math.round(amount * 100),
         activeFrom: now,
@@ -26,7 +27,7 @@ export default async function CambiarPrecio({ params }: { params: { serviceId: s
       }
     });
     await prisma.auditLog.create({
-      data: { action: 'CHANGE_PRICE', entity: 'Service', entityId: s.id, diff: { from: prev?.amountCents ?? null, to: Math.round(amount*100) } as any }
+      data: { action: 'CHANGE_PRICE', entity: 'Service', entityId: serviceId, diff: { from: prev?.amountCents ?? null, to: Math.round(amount*100) } as any }
     });
     redirect('/admin/precios');
   }

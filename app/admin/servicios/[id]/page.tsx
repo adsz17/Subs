@@ -4,13 +4,14 @@ import { notFound, redirect } from 'next/navigation';
 export default async function EditServicio({ params }: { params: { id: string } }) {
   const s = await prisma.service.findUnique({ where: { id: params.id } });
   if (!s) return notFound();
+  const serviceId = s.id;
 
   async function update(formData: FormData) {
     'use server';
     const name = String(formData.get('name') || '');
     const description = String(formData.get('description') || '');
     const isActive = formData.get('isActive') === 'on';
-    await prisma.service.update({ where: { id: s.id }, data: { name, description, isActive } });
+    await prisma.service.update({ where: { id: serviceId }, data: { name, description, isActive } });
     redirect('/admin/servicios');
   }
 
