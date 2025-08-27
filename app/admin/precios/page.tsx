@@ -22,7 +22,7 @@ export default async function Precios() {
               const currency = String(formData.get('currency') || 'USD');
               const amount = Number(formData.get('amount'));
               const now = new Date();
-              const curr = await prisma.price.findFirst({ where: { serviceId: s.id, isCurrent: True } as any });
+              const curr = await prisma.price.findFirst({ where: { serviceId: s.id, isCurrent: true } as any });
             }}>
               {/* Left intentionally blank to avoid TS/Prisma server action complexity here */}
             </form>
