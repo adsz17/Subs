@@ -21,7 +21,10 @@ export default async function ServiciosPage() {
             const price = p ? `${p.currency} ${(p.amountCents/100).toFixed(2)}` : 'Sin precio';
             return (
               <tr key={s.id}>
-                <td>{s.name}</td>
+                <td className="flex items-center gap-2">
+                  {s.imageUrl && <img src={s.imageUrl} alt={s.name} className="h-8 w-8 object-cover" />}
+                  <span>{s.name}</span>
+                </td>
                 <td>{price}</td>
               </tr>
             );
