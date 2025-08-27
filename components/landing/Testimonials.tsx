@@ -14,7 +14,7 @@ export function Testimonials() {
         {testimonials.map(t => (
           <Card key={t.author} className="bg-white/5">
             <CardContent className="p-6">
-              <p className="mb-4 italic">"{t.quote}"</p>
+              <p className="mb-4 italic">&ldquo;{t.quote}&rdquo;</p>
               <p className="text-sm font-semibold">{t.author}</p>
             </CardContent>
           </Card>

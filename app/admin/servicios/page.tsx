@@ -6,7 +6,7 @@ export const revalidate = 0;
 export default async function AdminServicios() {
   const servicios = await prisma.service.findMany({ orderBy: { createdAt: 'desc' } });
   return (
-    <div>
+    <div className="bg-white p-4 text-black">
       <h1 className="text-2xl font-bold mb-4">Servicios</h1>
       <Link className="btn" href="/admin/servicios/nuevo">Nuevo servicio</Link>
       <table className="mt-4">
