@@ -19,7 +19,7 @@ export function Stats() {
     <section className="container py-16">
       <div className="grid gap-8 md:grid-cols-3">
         {stats.map(s => (
-          <Card key={s.label} className="bg-white/5 text-center">
+          <Card key={s.label} className="text-center">
             <CardContent className="p-6 flex flex-col items-center">
               <s.icon className="mb-2 h-8 w-8 text-blue-500" aria-hidden />
               <p className="text-4xl font-bold">{s.value}</p>

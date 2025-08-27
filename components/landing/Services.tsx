@@ -20,7 +20,7 @@ export async function Services() {
         {servicios.map((s, i) => {
           const Icon = icons[i % icons.length];
           return (
-            <Card key={s.id} className="bg-white/5">
+            <Card key={s.id}>
               <CardHeader className="flex items-center gap-2">
                 <Icon className="h-6 w-6 text-blue-500" aria-hidden />
                 <CardTitle>{s.name}</CardTitle>
