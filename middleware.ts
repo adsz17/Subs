@@ -1,19 +1,14 @@
+import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  if (pathname.startsWith('/admin')) {
-    const role = req.cookies.get('role')?.value;
-    if (role !== 'ADMIN' && role !== 'STAFF') {
-      const url = req.nextUrl.clone();
-      url.pathname = '/login';
-      return NextResponse.redirect(url);
-    }
+export default withAuth(function middleware(req) {
+  const role = req.nextauth?.token?.role as string | undefined;
+  if (req.nextUrl.pathname.startsWith('/admin') && role !== 'ADMIN' && role !== 'STAFF') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
   }
   return NextResponse.next();
-}
+});
 
-export const config = {
-  matcher: ['/admin/:path*']
-};
+export const config = { matcher: ['/admin/:path*'] };
