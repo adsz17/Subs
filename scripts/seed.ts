@@ -1,18 +1,89 @@
+import bcrypt from 'bcryptjs';
+import { PaymentProvider, Role } from '@prisma/client';
 import { prisma } from '../lib/db';
 
 async function main() {
-  const s1 = await prisma.service.create({ data: { slug: 'landing-pro', name: 'Landing Pro', description: 'Landing page optimizada' } });
-  const s2 = await prisma.service.create({ data: { slug: 'ecommerce-mini', name: 'Ecommerce Mini', description: 'Catálogo + checkout' } });
-  const s3 = await prisma.service.create({ data: { slug: 'seo-pack', name: 'SEO Pack', description: 'Optimización SEO' } });
+  // Setting with defaults
+  await prisma.setting.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      id: 1,
+      paymentProvider: PaymentProvider.COINBASE,
+      defaultCurrency: 'USD'
+    }
+  });
+
+  // Admin user
+  const passwordHash = await bcrypt.hash('Admin123!', 10);
+  await prisma.user.upsert({
+    where: { email: 'admin@demo.com' },
+    update: {},
+    create: {
+      email: 'admin@demo.com',
+      passwordHash,
+      role: Role.ADMIN
+    }
+  });
+
+  // Example services
+  const services = await Promise.all([
+    prisma.service.upsert({
+      where: { slug: 'landing-pro' },
+      update: {},
+      create: {
+        slug: 'landing-pro',
+        name: 'Landing Pro',
+        description: 'Landing page optimizada'
+      }
+    }),
+    prisma.service.upsert({
+      where: { slug: 'ecommerce-mini' },
+      update: {},
+      create: {
+        slug: 'ecommerce-mini',
+        name: 'Ecommerce Mini',
+        description: 'Catálogo + checkout'
+      }
+    }),
+    prisma.service.upsert({
+      where: { slug: 'seo-pack' },
+      update: {},
+      create: {
+        slug: 'seo-pack',
+        name: 'SEO Pack',
+        description: 'Optimización SEO'
+      }
+    })
+  ]);
+
   const now = new Date();
   await prisma.price.createMany({
     data: [
-      { serviceId: s1.id, currency: 'USD', amountCents: 9900, activeFrom: now, isCurrent: true },
-      { serviceId: s2.id, currency: 'USD', amountCents: 19900, activeFrom: now, isCurrent: true },
-      { serviceId: s3.id, currency: 'USD', amountCents: 14900, activeFrom: now, isCurrent: true }
-    ]
+      { serviceId: services[0].id, currency: 'USD', amountCents: 9900, activeFrom: now, isCurrent: true },
+      { serviceId: services[1].id, currency: 'USD', amountCents: 19900, activeFrom: now, isCurrent: true },
+      { serviceId: services[2].id, currency: 'USD', amountCents: 14900, activeFrom: now, isCurrent: true }
+    ],
+    skipDuplicates: true
   });
+
+  // Welcome coupon
+  await prisma.coupon.upsert({
+    where: { code: 'BIENVENIDA10' },
+    update: {},
+    create: {
+      code: 'BIENVENIDA10',
+      percentage: 10,
+      validFrom: now
+    }
+  });
+
   console.log('Seed done');
 }
 
-main().then(()=>process.exit(0)).catch(e=>{ console.error(e); process.exit(1); });
+main()
+  .then(() => process.exit(0))
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });

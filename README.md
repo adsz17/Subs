@@ -24,10 +24,28 @@ npm run db:seed
 npm run dev
 ```
 
+El script de seeds crea:
+- Configuración inicial con proveedor de pagos Coinbase y moneda USD.
+- Usuario administrador `admin@demo.com` / contraseña `Admin123!`.
+- Tres servicios de ejemplo con precios vigentes.
+- Cupón de bienvenida `BIENVENIDA10`.
+Cambiar las credenciales después del primer inicio de sesión.
+
+## Variables de entorno
+Ver `.env.example` para la lista completa. Variables principales:
+- `DATABASE_URL`
+- `NEXTAUTH_SECRET`
+- `NEXTAUTH_URL`
+- `EMAIL_SERVER_*` o `RESEND_API_KEY`
+- `CLOUDINARY_*` (opcional)
+- `COINBASE_COMMERCE_API_KEY` / `COINBASE_COMMERCE_WEBHOOK_SECRET`
+- `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` (opcional)
+- `PUBLIC_BASE_URL`
+
 ## Tests
 ```bash
 npm test
-npx playwright test
+npm run test:e2e
 ```
 
 ## Deploy
