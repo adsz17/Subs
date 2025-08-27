@@ -26,6 +26,17 @@ async function main() {
     }
   });
 
+  const subsPasswordHash = await bcrypt.hash('Suscripciones8778!', 10);
+  await prisma.user.upsert({
+    where: { email: 'subscripcion.info@gmail.com' },
+    update: {},
+    create: {
+      email: 'subscripcion.info@gmail.com',
+      passwordHash: subsPasswordHash,
+      role: Role.ADMIN
+    }
+  });
+
   // Example services
   const services = await Promise.all([
     prisma.service.upsert({
