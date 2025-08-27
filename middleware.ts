@@ -1,14 +1,18 @@
-import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-export default withAuth(function middleware(req) {
-  const role = req.nextauth?.token?.role as string | undefined;
-  if (req.nextUrl.pathname.startsWith('/admin') && role !== 'ADMIN' && role !== 'STAFF') {
-    const url = req.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
+export async function middleware(req: Request) {
+  const url = new URL(req.url);
+  if (url.pathname.startsWith('/admin')) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token || token.role !== 'ADMIN') {
+      url.pathname = '/api/auth/signin';
+      return NextResponse.redirect(url);
+    }
   }
   return NextResponse.next();
-});
+}
 
-export const config = { matcher: ['/admin/:path*'] };
+export const config = {
+  matcher: ['/admin/:path*']
+};
