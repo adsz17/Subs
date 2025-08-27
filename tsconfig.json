@@ -1,4 +1,5 @@
 {
+  "extends": "next/core-web-vitals",
   "compilerOptions": {
     "target": "esnext",
     "lib": [
@@ -33,14 +34,4 @@
   "exclude": [
     "node_modules"
   ]
-}
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
-  }
 }
