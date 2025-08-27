@@ -52,3 +52,11 @@
     "vitest": "1.5.0"
   }
 }
+{
+  "prisma": {
+    "seed": "node --loader ts-node/esm ./scripts/seed.ts"
+  },
+  "scripts": {
+    "db:seed": "npx prisma db seed"
+  }
+}
