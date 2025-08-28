@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/db';
-import Link from 'next/link';
+import { ServiceCard } from './ServiceCard';
 
 export const revalidate = 0;
 
@@ -11,27 +11,23 @@ export default async function ServiciosPage() {
   });
 
   return (
-    <div className="container">
-      <h1 className="text-2xl font-bold mb-4">Servicios</h1>
-      <table>
-        <thead><tr><th>Servicio</th><th>Precio</th></tr></thead>
-        <tbody>
-          {servicios.map(s => {
-            const p = s.prices[0];
-            const price = p ? `${p.currency} ${(p.amountCents/100).toFixed(2)}` : 'Sin precio';
-            return (
-              <tr key={s.id}>
-                <td className="flex items-center gap-2">
-                  {s.imageUrl && <img src={s.imageUrl} alt={s.name} className="h-8 w-8 object-cover" />}
-                  <span>{s.name}</span>
-                </td>
-                <td>{price}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className="mt-4"><Link className="btn" href="/">Volver</Link></div>
+    <div className="container py-8">
+      <h1 className="mb-6 text-3xl font-bold">Servicios</h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {servicios.map((s) => {
+          const p = s.prices[0];
+          const price = p ? `$${(p.amountCents / 100).toFixed(2)}` : 'Sin precio';
+          return (
+            <ServiceCard
+              key={s.id}
+              id={s.id}
+              name={s.name}
+              description={s.description}
+              price={price}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
