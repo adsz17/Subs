@@ -20,16 +20,24 @@ export function Navbar() {
         <button className="sm:hidden" onClick={() => setOpen(!open)} aria-label="Toggle menu">
           ☰
         </button>
-        <ul className={`sm:flex gap-6 text-sm ${open ? 'block' : 'hidden'} sm:block`}>
+        <ul
+          className={`${open ? 'flex' : 'hidden'} flex-col sm:flex sm:flex-row gap-4 sm:gap-6 text-sm`}
+        >
           {links.map(l => (
             <li key={l.href}>
-              <a href={l.href} className="hover:underline" onClick={() => setOpen(false)}>{l.label}</a>
+              <a
+                href={l.href}
+                className="hover:underline"
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </a>
             </li>
           ))}
           <li>
             <a
               href="#contacto"
-              className="rounded-md bg-zinc-900 px-3 py-1.5 text-white hover:bg-zinc-700"
+              className="rounded-md bg-zinc-900 px-3 py-1.5 text-white hover:bg-zinc-700 w-full sm:w-auto text-center"
               onClick={() => setOpen(false)}
             >
               Contactar

@@ -16,11 +16,11 @@ export function Hero() {
         <p className="mb-8 text-lg text-zinc-600 md:text-2xl">
           Lanza y vende tus servicios digitales con pagos cripto o tarjeta.
         </p>
-        <div className="flex justify-center gap-4">
-          <Button asChild>
+        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <Button asChild className="w-full sm:w-auto">
             <a href="#servicios">Ver servicios</a>
           </Button>
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="w-full sm:w-auto">
             <a href="#contacto">Contactar</a>
           </Button>
         </div>
