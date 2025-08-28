@@ -40,7 +40,7 @@ export default function CheckoutClient() {
     await fetch(`/api/orders/${orderId}/confirm`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hash: tx })
+      body: JSON.stringify({ hash: tx, network })
     });
     clear();
     setStep(2);
