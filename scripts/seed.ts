@@ -16,6 +16,18 @@ async function main() {
       qrCodeUrl: ''
     }
   });
+  // Payments config
+  await prisma.paymentsConfig.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      id: 1,
+      network: "TRON-TRC20",
+      wallet: "",
+      provider: "manual"
+    }
+  });
+
 
   // Admin user
   const passwordHash = await bcrypt.hash('Admin123!', 10);
