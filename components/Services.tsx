@@ -1,8 +1,13 @@
 import { prisma } from '@/lib/db';
+import { unstable_noStore as noStore } from 'next/cache';
 import { Code, Globe, Layers } from 'lucide-react';
 import { ServiceCard } from '@/components/ServiceCard';
 
 export async function Services() {
+  // Ensure services are fetched on every request so that changes in
+  // the admin panel (create/delete) are reflected immediately on the
+  // public site without requiring a rebuild.
+  noStore();
   let servicios: Array<{ id: string; name: string; description: string | null }> = [];
   try {
     servicios = await prisma.service.findMany({

@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
@@ -47,6 +48,9 @@ export default function NuevoServicio() {
         }
       });
     }
+    // Invalidate the home page so new services become visible immediately
+    // after creation.
+    revalidatePath('/');
     redirect('/admin/servicios');
   }
 
