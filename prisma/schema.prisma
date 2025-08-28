@@ -48,6 +48,8 @@ model User {
   sessions     Session[]
   orders       Order[]
   auditLogs    AuditLog[]
+  carts       Cart[]
+  purchases   Purchase[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 }
@@ -87,6 +89,8 @@ model Service {
   isActive    Boolean     @default(true)
   prices      Price[]
   orderItems  OrderItem[]
+  cartItems   CartItem[]
+  purchaseItems PurchaseItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
@@ -154,6 +158,53 @@ model Payment {
   rawPayload  Json?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+}
+
+enum PurchaseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Cart {
+  id        String    @id @default(cuid())
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+  items     CartItem[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId    String
+  service   Service  @relation(fields: [serviceId], references: [id])
+  serviceId String
+  quantity  Int      @default(1)
+}
+
+model Purchase {
+  id        String         @id @default(cuid())
+  user      User?          @relation(fields: [userId], references: [id])
+  userId    String?
+  status    PurchaseStatus @default(PENDING)
+  txHash    String
+  network   String
+  items     PurchaseItem[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model PurchaseItem {
+  id            String    @id @default(cuid())
+  purchase      Purchase  @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  purchaseId    String
+  service       Service   @relation(fields: [serviceId], references: [id])
+  serviceId     String
+  quantity      Int       @default(1)
+  unitPriceCents Int
+  currency      String
 }
 
 model WebhookEvent {
