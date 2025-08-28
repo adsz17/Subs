@@ -15,10 +15,10 @@ enum Role {
 
 enum OrderStatus {
   PENDING
-  REQUIRES_PAYMENT
+  REVIEW
   PAID
-  CANCELLED
-  REFUNDED
+  FAILED
+  CANCELED
 }
 
 enum PaymentProvider {
@@ -130,6 +130,11 @@ model Order {
   totalCents    Int
   currency      String
   items         OrderItem[]
+  network      String?
+  wallet       String?
+  customerTx   String?
+  provider     String?
+  providerId   String?
   payments      Payment[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -241,3 +246,14 @@ model Setting {
   walletAddress   String?
   qrCodeUrl       String?
 }
+
+model PaymentsConfig {
+  id        Int      @id @default(1)
+  network   String
+  wallet    String
+  qrUrl     String?
+  provider  String   @default("manual")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
