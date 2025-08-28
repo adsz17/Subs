@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const links = [
   { href: '#servicios', label: 'Servicios' },
@@ -20,10 +21,20 @@ export function Navbar() {
         <button className="sm:hidden" onClick={() => setOpen(!open)} aria-label="Toggle menu">
           ☰
         </button>
-        <ul className={`sm:flex gap-6 text-sm ${open ? 'block' : 'hidden'} sm:block`}>
+        <ul
+          className={cn(
+            'text-sm',
+            open
+              ? 'absolute left-0 right-0 top-full flex flex-col items-center gap-4 bg-white p-4 shadow-md'
+              : 'hidden',
+            'sm:static sm:flex sm:flex-row sm:gap-6 sm:bg-transparent sm:p-0'
+          )}
+        >
           {links.map(l => (
             <li key={l.href}>
-              <a href={l.href} className="hover:underline" onClick={() => setOpen(false)}>{l.label}</a>
+              <a href={l.href} className="hover:underline" onClick={() => setOpen(false)}>
+                {l.label}
+              </a>
             </li>
           ))}
           <li>
