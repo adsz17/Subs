@@ -10,7 +10,10 @@ async function main() {
     create: {
       id: 1,
       paymentProvider: PaymentProvider.COINBASE,
-      defaultCurrency: 'USD'
+      defaultCurrency: 'USD',
+      cryptoNetwork: 'Ethereum',
+      walletAddress: '',
+      qrCodeUrl: ''
     }
   });
 
