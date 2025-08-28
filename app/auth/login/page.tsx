@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get('next') || '/admin';
@@ -49,5 +49,13 @@ export default function LoginPage() {
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
