@@ -2,9 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const plans = [
-  { name: 'Starter', price: 'Gratis', features: ['1 servicio'], cta: '/servicios' },
-  { name: 'Business', price: 'USD 49', features: ['Todo Starter', 'Soporte prioritario'], cta: '/servicios' },
-  { name: 'Pro', price: 'USD 99', features: ['Todo Business', 'Integraciones avanzadas'], cta: '/servicios' }
+  { name: 'Starter', price: 'Gratis', features: ['1 servicio'] },
+  {
+    name: 'Business',
+    price: 'USD 49',
+    features: ['Todo Starter', 'Soporte prioritario'],
+  },
+  {
+    name: 'Pro',
+    price: 'USD 99',
+    features: ['Todo Business', 'Integraciones avanzadas'],
+  },
 ];
 
 export function Pricing() {
@@ -25,7 +33,7 @@ export function Pricing() {
                 ))}
               </ul>
               <Button asChild className="mt-4">
-                <a href={p.cta}>Comprar</a>
+                <a href={`/comprar?plan=${encodeURIComponent(p.name)}`}>Comprar</a>
               </Button>
             </CardContent>
           </Card>

@@ -237,4 +237,7 @@ model Setting {
   companyName     String?
   companyEmail    String?
   publicUrl       String?
+  cryptoNetwork   String?
+  walletAddress   String?
+  qrCodeUrl       String?
 }
