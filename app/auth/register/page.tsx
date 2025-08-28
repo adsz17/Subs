@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
-export default function RegisterPage() {
+function RegisterPageContent() {
   const router = useRouter();
   const search = useSearchParams();
   const next = search.get('next') || '/checkout';
@@ -59,5 +59,13 @@ export default function RegisterPage() {
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterPageContent />
+    </Suspense>
   );
 }
