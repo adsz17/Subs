@@ -31,9 +31,9 @@ export function Contact() {
   };
 
   return (
-    <section id="contacto" className="container py-16 max-w-xl">
-      <h2 className="mb-8 text-center text-3xl font-bold">Contacto</h2>
-      {submitted && <p className="mb-4 text-green-500">Mensaje enviado!</p>}
+    <section id="contacto" className="mx-auto max-w-md px-4 pt-[var(--section-pt)] pb-[var(--section-pb)]">
+      <h2 className="mb-8 text-center text-3xl font-serif">Contacto</h2>
+      {submitted && <p className="mb-4 text-green-600">Mensaje enviado!</p>}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <Input placeholder="Nombre" {...register('name')} aria-invalid={!!errors.name} />
@@ -47,7 +47,7 @@ export function Contact() {
           <Textarea placeholder="Mensaje" rows={4} {...register('message')} aria-invalid={!!errors.message} />
           {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message.message}</p>}
         </div>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? 'Enviando...' : 'Enviar'}
         </Button>
       </form>

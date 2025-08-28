@@ -9,8 +9,8 @@ const plans = [
 
 export function Pricing() {
   return (
-    <section id="precios" className="container py-16">
-      <h2 className="mb-8 text-center text-3xl font-bold">Precios</h2>
+    <section id="precios" className="mx-auto max-w-7xl px-4 pt-[var(--section-pt)] pb-[var(--section-pb)]">
+      <h2 className="mb-12 text-center text-3xl font-serif">Precios</h2>
       <div className="grid gap-8 md:grid-cols-3">
         {plans.map(p => (
           <Card key={p.name} className="text-center">
@@ -19,7 +19,7 @@ export function Pricing() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-4xl font-bold">{p.price}</p>
-              <ul className="text-sm space-y-1">
+              <ul className="space-y-1 text-sm">
                 {p.features.map(f => (
                   <li key={f}>{f}</li>
                 ))}

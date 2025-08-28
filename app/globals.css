@@ -2,7 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../styles/theme.css';
+
 html {
+  scroll-behavior: smooth;
+}
+
+body {
   font-family: var(--font-sans);
 }
 
@@ -13,51 +19,4 @@ h4,
 h5,
 h6 {
   font-family: var(--font-display);
-}
-
-a {
-  color: #5b21b6;
-  text-decoration: underline;
-}
-
-a:hover {
-  color: #4338ca;
-}
-
-input,
-select,
-button {
-  color: black;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  border-bottom: 1px solid #333;
-  padding: 8px;
-  text-align: left;
-}
-
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.btn {
-  background: linear-gradient(135deg, #7f5af0, #9d4edd);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 9999px;
-  display: inline-block;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

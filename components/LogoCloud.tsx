@@ -2,9 +2,9 @@ import Image from 'next/image';
 
 const logos = Array.from({ length: 5 }, (_, i) => `https://placehold.co/100x40?text=Logo+${i+1}&grayscale`);
 
-export function Logos() {
+export function LogoCloud() {
   return (
-    <section className="container py-16">
+    <section className="mx-auto max-w-7xl px-4 pt-[var(--section-pt)] pb-[var(--section-pb)]">
       <div className="flex flex-wrap items-center justify-center gap-6 opacity-70">
         {logos.map((logo, i) => (
           <Image key={i} src={logo} alt={`Logo ${i + 1}`} width={100} height={40} />
