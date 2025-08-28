@@ -1,75 +1,55 @@
 import { prisma } from '@/lib/db';
-import { notFound, redirect } from 'next/navigation';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
+import { notFound } from 'next/navigation';
+import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
+import { Tabs } from '@/components/admin/Tabs';
+import { StatusBadge } from '@/components/admin/StatusBadge';
+import { formatMoney } from '@/lib/format';
 
-export default async function EditServicio({ params }: { params: { id: string } }) {
-  const s = await prisma.service.findUnique({ where: { id: params.id }, include: { prices: { where: { isCurrent: true } } } });
-  if (!s) return notFound();
-  const current = s.prices[0];
-  const serviceId = s.id;
-  const existingImageUrl = s.imageUrl || '';
-
-  async function update(formData: FormData) {
-    'use server';
-    const name = String(formData.get('name') || '');
-    const description = String(formData.get('description') || '');
-    const image = formData.get('image') as File | null;
-    let imageUrl = existingImageUrl;
-    const isActive = formData.get('isActive') === 'on';
-    const currency = String(formData.get('currency') || 'USD');
-    const amount = Number(formData.get('amount') || 0);
-    if (image && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const ext = path.extname(image.name) || '.png';
-      const filename = `${serviceId}${ext}`;
-      const uploadDir = path.join(process.cwd(), 'public', 'services');
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
-      imageUrl = `/services/${filename}`;
-    }
-    await prisma.service.update({ where: { id: serviceId }, data: { name, description, imageUrl, isActive } });
-    const now = new Date();
-    const prev = await prisma.price.findFirst({ where: { serviceId, isCurrent: true } });
-    if (amount > 0 && (prev?.amountCents !== Math.round(amount * 100) || prev?.currency !== currency)) {
-      if (prev) {
-        await prisma.price.update({ where: { id: prev.id }, data: { isCurrent: false, activeTo: now } });
-      }
-      await prisma.price.create({
-        data: {
-          serviceId,
-          currency,
-          amountCents: Math.round(amount * 100),
-          activeFrom: now,
-          isCurrent: true
-        }
-      });
-      await prisma.auditLog.create({
-        data: {
-          action: 'CHANGE_PRICE',
-          entity: 'Service',
-          entityId: serviceId,
-          diff: { from: prev?.amountCents ?? null, to: Math.round(amount * 100) } as any
-        }
-      });
-    }
-    redirect('/admin/servicios');
-  }
+export default async function ServicioDetail({ params }: { params: { id: string } }) {
+  const service = await prisma.service.findUnique({
+    where: { id: params.id },
+    include: { prices: true }
+  });
+  if (!service) notFound();
 
   return (
-    <form action={update} encType="multipart/form-data" className="max-w-lg space-y-3 bg-white p-4 text-black">
-      <h1 className="text-xl font-bold">Editar servicio</h1>
-      <input className="border p-2 w-full" name="name" defaultValue={s.name} />
-      <textarea className="border p-2 w-full" name="description" defaultValue={s.description || ''} />
-      {s.imageUrl && <img src={s.imageUrl} alt={s.name} className="h-24 object-cover" />}
-      <input className="border p-2 w-full" type="file" accept="image/*" name="image" />
-      <div className="flex gap-2">
-        <input className="border p-2 w-full" name="currency" defaultValue={current?.currency || 'USD'} />
-        <input className="border p-2 w-full" name="amount" type="number" step="0.01" defaultValue={current ? (current.amountCents / 100).toString() : ''} />
-      </div>
-      <label className="flex items-center gap-2"><input type="checkbox" name="isActive" defaultChecked={s.isActive} /> Activo</label>
-      <button className="btn" type="submit">Guardar</button>
-    </form>
+    <div>
+      <Breadcrumbs items={[{ label: 'Servicios', href: '/admin/servicios' }, { label: service.name }]} />
+      <Tabs
+        tabs={[
+          {
+            label: 'Info',
+            content: (
+              <div className="space-y-4">
+                <h1 className="text-2xl font-semibold">{service.name}</h1>
+                <StatusBadge active={service.isActive} />
+                {service.description && (
+                  <p className="text-sm text-gray-700">{service.description}</p>
+                )}
+              </div>
+            )
+          },
+          {
+            label: 'Precios',
+            content: (
+              <ul className="space-y-2">
+                {service.prices.map((p) => (
+                  <li key={p.id} className="flex justify-between rounded-md bg-white p-2 shadow">
+                    <span>{formatMoney(p.amountCents, p.currency)}</span>
+                  </li>
+                ))}
+                {service.prices.length === 0 && (
+                  <p className="text-sm text-gray-500">Sin precios</p>
+                )}
+              </ul>
+            )
+          },
+          {
+            label: 'Historial',
+            content: <p className="text-sm text-gray-500">Sin historial</p>
+          }
+        ]}
+      />
+    </div>
   );
 }
