@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Home, Package, DollarSign, Settings, X } from "lucide-react";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { Home, Package, ShoppingCart, Settings, X } from 'lucide-react';
 
 const links = [
-  { href: "/admin", label: "Dashboard", icon: Home },
-  { href: "/admin/servicios", label: "Servicios", icon: Package },
-  { href: "/admin/precios", label: "Precios", icon: DollarSign },
-  { href: "/admin/ajustes", label: "Ajustes", icon: Settings }
+  { href: '/admin', label: 'Dashboard', icon: Home },
+  { href: '/admin/servicios', label: 'Servicios', icon: Package },
+  { href: '/admin/compras', label: 'Compras', icon: ShoppingCart },
+  { href: '/admin/ajustes', label: 'Ajustes', icon: Settings },
 ];
 
 interface Props {
@@ -23,8 +23,8 @@ export function AppSidebar({ open, onClose }: Props) {
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 w-64 border-r bg-white p-4 shadow transition-transform dark:bg-gray-900 md:static md:translate-x-0",
-        open ? "translate-x-0" : "-translate-x-full"
+        'fixed inset-y-0 left-0 z-40 w-64 border-r bg-white p-4 shadow transition-transform dark:bg-gray-900 md:static md:translate-x-0',
+        open ? 'translate-x-0' : '-translate-x-full',
       )}
     >
       <div className="mb-6 flex items-center justify-between md:hidden">
@@ -40,8 +40,8 @@ export function AppSidebar({ open, onClose }: Props) {
             href={href}
             onClick={onClose}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800",
-              pathname === href && "bg-gray-100 dark:bg-gray-800"
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800',
+              pathname === href && 'bg-gray-100 dark:bg-gray-800',
             )}
           >
             <Icon className="h-4 w-4" />
@@ -52,4 +52,3 @@ export function AppSidebar({ open, onClose }: Props) {
     </aside>
   );
 }
-

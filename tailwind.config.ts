@@ -1,20 +1,21 @@
 import type { Config } from 'tailwindcss';
 
 export default {
+  darkMode: 'class',
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)'],
-        serif: ['var(--font-display)']
+        serif: ['var(--font-display)'],
       },
       borderRadius: {
-        '2xl': 'var(--radius-2xl)'
+        '2xl': 'var(--radius-2xl)',
       },
       boxShadow: {
-        soft: 'var(--shadow-soft)'
-      }
-    }
+        soft: 'var(--shadow-soft)',
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 } satisfies Config;
