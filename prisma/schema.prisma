@@ -16,9 +16,11 @@ enum Role {
 enum OrderStatus {
   PENDING
   REVIEW
+  REQUIRES_PAYMENT
   PAID
   FAILED
-  CANCELED
+  CANCELED @map("CANCELLED")
+  REFUNDED
 }
 
 enum PaymentProvider {
