@@ -10,6 +10,7 @@ export async function POST(req: Request) {
     data: {
       email: 'guest@example.com',
       status: OrderStatus.PENDING,
+      subtotalCents: Math.round(total * 100),
       totalCents: Math.round(total * 100),
       currency: 'USDT',
       network: config?.network || '',
