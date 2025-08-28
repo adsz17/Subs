@@ -7,6 +7,7 @@ import type { Metadata } from 'next';
 import { authOptions } from '@/lib/auth';
 
 export const metadata: Metadata = {
+  title: 'Admin',
   robots: { index: false, follow: false }
 };
 
@@ -16,13 +17,13 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     redirect('/');
   }
   return (
-    <div className="container">
+    <main className="container mx-auto p-6">
       <nav className="mb-6 flex gap-4">
         <Link href="/admin">Dashboard</Link>
         <Link href="/admin/servicios">Servicios</Link>
         <Link href="/admin/precios">Precios</Link>
       </nav>
       {children}
-    </div>
+    </main>
   );
 }
