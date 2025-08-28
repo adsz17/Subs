@@ -2,6 +2,8 @@ import { prisma } from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
+import { mkdir, writeFile } from 'fs/promises';
+import path from 'path';
 
 export default async function EditServicio({
   params,
@@ -21,6 +23,20 @@ export default async function EditServicio({
       where: { id: params.id },
       data: { name, slug, description, isActive },
     });
+    const image = formData.get('image') as File | null;
+    if (image && image.size > 0) {
+      const bytes = await image.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const ext = path.extname(image.name) || '.png';
+      const filename = `${params.id}${ext}`;
+      const uploadDir = path.join(process.cwd(), 'public', 'services');
+      await mkdir(uploadDir, { recursive: true });
+      await writeFile(path.join(uploadDir, filename), buffer);
+      await prisma.service.update({
+        where: { id: params.id },
+        data: { imageUrl: `/services/${filename}` },
+      });
+    }
     redirect('/admin/servicios');
   }
 
@@ -40,6 +56,7 @@ export default async function EditServicio({
       />
       <form
         action={update}
+        encType="multipart/form-data"
         className="mx-auto mt-4 max-w-lg space-y-4 rounded-md bg-white p-4 shadow dark:bg-gray-900"
       >
         <div className="space-y-2">
@@ -72,6 +89,25 @@ export default async function EditServicio({
             id="description"
             name="description"
             defaultValue={service.description || ''}
+            className="w-full rounded-md border p-2 bg-white dark:bg-gray-950 dark:text-white"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="image" className="block text-sm font-medium">
+            Imagen
+          </label>
+          {service.imageUrl && (
+            <img
+              src={service.imageUrl}
+              alt=""
+              className="mb-2 h-32 w-auto object-contain"
+            />
+          )}
+          <input
+            id="image"
+            name="image"
+            type="file"
+            accept="image/*"
             className="w-full rounded-md border p-2 bg-white dark:bg-gray-950 dark:text-white"
           />
         </div>
