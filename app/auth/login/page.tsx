@@ -1,42 +1,51 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('ADMIN');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const doLogin = async () => {
-    document.cookie = `role=${role}; path=/`;
-    window.location.href = '/admin';
+    setError('');
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+    if (res?.ok) {
+      router.push('/admin');
+    } else {
+      setError('Credenciales inválidas');
+    }
   };
 
   return (
     <div className="mx-auto max-w-md p-6">
-      <h1 className="mb-4 text-2xl font-bold">Login (demo)</h1>
+      <h1 className="mb-4 text-2xl font-bold">Login</h1>
       <div className="space-y-3">
         <input
           className="w-full border p-2"
-          placeholder="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <select
+        <input
           className="w-full border p-2"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option>ADMIN</option>
-          <option>STAFF</option>
-          <option>CUSTOMER</option>
-        </select>
+          placeholder="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <button className="border px-4 py-2" onClick={doLogin}>
           Entrar
         </button>
+        {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
-      <p className="mt-4 text-sm text-gray-500">
-        Este login es de demo para proteger /admin. Integra NextAuth más adelante.
-      </p>
     </div>
   );
 }

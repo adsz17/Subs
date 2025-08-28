@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { env } from './env.mjs';
 
 export async function middleware(req: NextRequest) {
-  const url = new URL(req.url);
-  const role = req.cookies.get('role')?.value;
-  if (role !== 'ADMIN') {
-    url.pathname = '/auth/login';
-    return NextResponse.redirect(url);
+  const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
+  if (token?.role !== 'ADMIN') {
+    const loginUrl = new URL('/auth/login', req.url);
+    return NextResponse.redirect(loginUrl);
   }
   const res = NextResponse.next();
   res.headers.set('X-Frame-Options', 'DENY');
