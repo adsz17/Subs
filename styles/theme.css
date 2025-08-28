@@ -1,0 +1,13 @@
+:root {
+  --radius-2xl: 1.5rem;
+  --shadow-soft: 0 4px 24px rgba(0,0,0,0.08);
+  --section-pt: 5rem;
+  --section-pb: 5rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section-pt: 6rem;
+    --section-pb: 6rem;
+  }
+}

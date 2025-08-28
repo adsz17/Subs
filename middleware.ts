@@ -10,9 +10,12 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(url);
     }
   }
-  return NextResponse.next();
+  const res = NextResponse.next();
+  res.headers.set('X-Frame-Options', 'DENY');
+  res.headers.set('Content-Security-Policy', "frame-ancestors 'none'");
+  return res;
 }
 
 export const config = {
-  matcher: ['/admin/:path*']
+  matcher: ['/(.*)']
 };
