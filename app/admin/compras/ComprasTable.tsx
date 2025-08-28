@@ -16,13 +16,16 @@ const ActionButtons = ({ id }: { id: string }) => {
   };
   return (
     <div className="flex gap-2">
-      <Button variant="outline" size="sm" onClick={() => update('APPROVED')}>
+      <Button
+        variant="outline"
+        className="h-8 px-3"
+        onClick={() => update('APPROVED')}
+      >
         Aprobar
       </Button>
       <Button
         variant="outline"
-        size="sm"
-        className="border-red-600 text-red-600 hover:bg-red-50 dark:border-red-600 dark:text-red-600 dark:hover:bg-red-950"
+        className="h-8 px-3 border-red-600 text-red-600 hover:bg-red-50 dark:border-red-600 dark:text-red-600 dark:hover:bg-red-950"
         onClick={() => update('REJECTED')}
       >
         Rechazar
