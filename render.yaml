@@ -3,5 +3,5 @@ services:
     name: subs
     env: node
     buildCommand: npm ci && npm run build
-    preDeployCommand: npx prisma db push && npx prisma db seed
+    preDeployCommand: npx prisma db push --accept-data-loss && npx prisma db seed
     startCommand: npm start
