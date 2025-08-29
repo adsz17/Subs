@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { prisma } from '@/lib/db';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 
@@ -28,7 +27,11 @@ export default async function ProyectosPage() {
                 <td className="p-2">{p.title}</td>
                 <td className="p-2">
                   {p.imageUrl && (
-                    <Image src={p.imageUrl} alt="" width={100} height={60} unoptimized />
+                    <img
+                      src={p.imageUrl}
+                      alt=""
+                      className="h-[60px] w-[100px] object-cover"
+                    />
                   )}
                 </td>
                 <td className="p-2 text-right">

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { CopyButton } from './CopyButton';
 
 interface Props {
@@ -31,7 +30,7 @@ export function WalletBox({ address, qrUrl, network }: Props) {
       </a>
       {qrUrl && (
         <div className="mt-4">
-          <Image src={qrUrl} alt="QR" width={150} height={150} unoptimized />
+          <img src={qrUrl} alt="QR" className="h-[150px] w-[150px]" />
         </div>
       )}
     </div>
