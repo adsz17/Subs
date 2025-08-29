@@ -6,7 +6,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['placehold.co'],
+    domains: ['res.cloudinary.com'],
   },
   webpack: (config) => {
     config.resolve.alias = {
