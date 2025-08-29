@@ -7,21 +7,25 @@ interface Props {
 }
 
 export default async function ComprarPage({ searchParams }: Props) {
-  const settings = await prisma.setting.findUnique({ where: { id: 1 } });
+  const payments = await prisma.paymentsConfig.findMany();
   const plan = searchParams.plan;
   return (
     <div className="container space-y-4">
       <h1 className="text-2xl font-bold">Carrito</h1>
       {plan && <p>Plan seleccionado: {plan}</p>}
-      {settings?.cryptoNetwork && <p>Red: {settings.cryptoNetwork}</p>}
-      {settings?.walletAddress && <p>Billetera: {settings.walletAddress}</p>}
-      {settings?.qrCodeUrl && (
-        <img
-          src={settings.qrCodeUrl}
-          alt="Código QR"
-          className="h-48 w-48 object-cover"
-        />
-      )}
+      {payments.map((p) => (
+        <div key={p.id} className="space-y-2">
+          <p>Red: {p.network}</p>
+          <p>Billetera: {p.wallet}</p>
+          {p.qrUrl && (
+            <img
+              src={p.qrUrl}
+              alt="Código QR"
+              className="h-48 w-48 object-cover"
+            />
+          )}
+        </div>
+      ))}
     </div>
   );
 }

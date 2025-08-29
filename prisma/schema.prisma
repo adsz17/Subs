@@ -259,7 +259,7 @@ model Setting {
 }
 
 model PaymentsConfig {
-  id        Int      @id @default(1)
+  id        Int      @id @default(autoincrement())
   network   String
   wallet    String
   qrUrl     String?
