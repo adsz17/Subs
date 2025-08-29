@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
+import { saveLogo } from '@/lib/upload';
 
 export default function NuevoLogo() {
   async function create(formData: FormData) {
@@ -9,14 +8,8 @@ export default function NuevoLogo() {
     const image = formData.get('image') as File | null;
     if (!image || image.size === 0) return;
     const logo = await prisma.logo.create({ data: { imageUrl: '' } });
-    const bytes = await image.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const ext = path.extname(image.name) || '.png';
-    const filename = `${logo.id}${ext}`;
-    const uploadDir = path.join(process.cwd(), 'public', 'logos');
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(path.join(uploadDir, filename), buffer);
-    await prisma.logo.update({ where: { id: logo.id }, data: { imageUrl: `/logos/${filename}` } });
+    const url = await saveLogo(image, logo.id);
+    await prisma.logo.update({ where: { id: logo.id }, data: { imageUrl: url } });
     redirect('/admin/logos');
   }
 
