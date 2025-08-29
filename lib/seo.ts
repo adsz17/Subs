@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const baseUrl = process.env.PUBLIC_BASE_URL || 'https://example.com';
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(baseUrl),
