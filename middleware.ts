@@ -1,33 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { env } from './env.mjs';
 
 export async function middleware(req: NextRequest) {
+  const isAdmin = req.nextUrl.pathname.startsWith('/admin');
+  if (!isAdmin) return NextResponse.next();
+
   const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
-  const { pathname } = req.nextUrl;
-
-  if (pathname.startsWith('/admin')) {
-    if (token?.role !== 'ADMIN') {
-      const loginUrl = new URL('/auth/login', req.url);
-      loginUrl.searchParams.set('next', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  const role = (token as any)?.role;
+  if (!token || !['ADMIN', 'STAFF'].includes(role)) {
+    return NextResponse.redirect(new URL('/auth/login', req.url));
   }
-
-  if (pathname.startsWith('/carrito')) {
-    if (!token) {
-      const loginUrl = new URL('/auth/login', req.url);
-      loginUrl.searchParams.set('next', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-
-  const res = NextResponse.next();
-  res.headers.set('X-Frame-Options', 'DENY');
-  res.headers.set('Content-Security-Policy', "frame-ancestors 'none'");
-  return res;
+  return NextResponse.next();
 }
 
-export const config = {
-  matcher: ['/admin/:path*', '/carrito', '/carrito/:path*'],
-};
+export const config = { matcher: ['/admin/:path*'] };
