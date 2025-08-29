@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Home, Package, ShoppingCart, Settings, X } from 'lucide-react';
+import { Home, Package, ShoppingCart, Settings, MessageSquare, X } from 'lucide-react';
 
 const links = [
   { href: '/admin', label: 'Dashboard', icon: Home },
   { href: '/admin/servicios', label: 'Servicios', icon: Package },
   { href: '/admin/compras', label: 'Compras', icon: ShoppingCart },
+  { href: '/admin/mensajes', label: 'Mensajes', icon: MessageSquare },
   { href: '/admin/ajustes', label: 'Ajustes', icon: Settings },
 ];
 

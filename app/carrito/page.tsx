@@ -12,9 +12,9 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto max-w-4xl p-4">
       <CartTable />
-      <div className="flex justify-end">
+      <div className="mt-6 flex justify-center">
         <CartSummary />
       </div>
     </div>
