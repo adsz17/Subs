@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface ProjectCardProps {
@@ -10,13 +9,10 @@ interface ProjectCardProps {
 export function ProjectCard({ title, image, tags = [] }: ProjectCardProps) {
   return (
     <Card className="overflow-hidden shadow-soft transition-transform hover:-translate-y-1">
-      <Image
+      <img
         src={image}
         alt={title}
-        width={600}
-        height={400}
         className="h-40 w-full object-cover"
-        unoptimized
       />
       <CardContent className="p-4 space-y-2">
         <p className="font-medium">{title}</p>
