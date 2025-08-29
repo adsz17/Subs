@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { contactSchema } from '@/lib/validations';
 import { Resend } from 'resend';
 import nodemailer from 'nodemailer';
+import { prisma } from '@/lib/db';
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -11,6 +12,7 @@ export async function POST(req: Request) {
   }
   const { name, email, message } = parsed.data;
   try {
+    await prisma.contactMessage.create({ data: { name, email, message } });
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({

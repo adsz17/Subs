@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { ContactModal } from '@/components/ContactModal';
 
 interface ServiceCardProps {
   icon: LucideIcon;
@@ -17,7 +17,7 @@ export function ServiceCard({ icon: Icon, title, description }: ServiceCardProps
       </CardHeader>
       <CardContent className="space-y-4">
         {description && <p className="text-sm text-zinc-600">{description}</p>}
-        <Button variant="outline" className="w-full">Consultar</Button>
+        <ContactModal />
       </CardContent>
     </Card>
   );
