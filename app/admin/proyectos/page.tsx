@@ -27,7 +27,9 @@ export default async function ProyectosPage() {
               <tr key={p.id} className="border-t">
                 <td className="p-2">{p.title}</td>
                 <td className="p-2">
-                  {p.imageUrl && <Image src={p.imageUrl} alt="" width={100} height={60} />}
+                  {p.imageUrl && (
+                    <Image src={p.imageUrl} alt="" width={100} height={60} unoptimized />
+                  )}
                 </td>
                 <td className="p-2 text-right">
                   <Link href={`/admin/proyectos/${p.id}`} className="text-blue-600">

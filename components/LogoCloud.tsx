@@ -8,8 +8,8 @@ export async function LogoCloud() {
   return (
     <section className="mx-auto max-w-7xl px-4 pt-[var(--section-pt)] pb-[var(--section-pb)]">
       <div className="flex flex-wrap items-center justify-center gap-6 opacity-70">
-        {logos.map(l => (
-          <Image key={l.id} src={l.imageUrl} alt="Logo" width={100} height={40} />
+        {logos.map((l) => (
+          <Image key={l.id} src={l.imageUrl} alt="Logo" width={100} height={40} unoptimized />
         ))}
         {logos.length === 0 && <p>No hay logos disponibles.</p>}
       </div>

@@ -31,7 +31,7 @@ export function WalletBox({ address, qrUrl, network }: Props) {
       </a>
       {qrUrl && (
         <div className="mt-4">
-          <Image src={qrUrl} alt="QR" width={150} height={150} />
+          <Image src={qrUrl} alt="QR" width={150} height={150} unoptimized />
         </div>
       )}
     </div>
