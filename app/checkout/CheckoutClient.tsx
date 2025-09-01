@@ -19,9 +19,19 @@ export default function CheckoutClient() {
   const orderId = searchParams.get('orderId');
 
   useEffect(() => {
-    fetch('/api/admin/payments-config')
-      .then((r) => r.json())
-      .then(setConfig);
+    const loadConfig = async () => {
+      try {
+        const r = await fetch('/api/admin/payments-config');
+        if (!r.ok) {
+          console.error('Failed to fetch payments config', await r.text());
+          return;
+        }
+        setConfig(await r.json());
+      } catch (err) {
+        console.error('Failed to fetch payments config', err);
+      }
+    };
+    loadConfig();
   }, []);
 
   const start = async () => {
@@ -30,6 +40,10 @@ export default function CheckoutClient() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items })
     });
+    if (!res.ok) {
+      console.error('Failed to start checkout', await res.text());
+      return;
+    }
     const data = await res.json();
     window.history.replaceState(null, '', `/checkout?orderId=${data.id}`);
     setStep(1);
