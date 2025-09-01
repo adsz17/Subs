@@ -21,9 +21,20 @@ export function NetworkSelector({
   const [config, setConfig] = useState<Config | null>(null);
 
   useEffect(() => {
-    fetch('/api/admin/payments-config')
-      .then((r) => r.json())
-      .then((data) => setConfig(data));
+    const loadConfig = async () => {
+      try {
+        const r = await fetch('/api/admin/payments-config');
+        if (!r.ok) {
+          console.error('Failed to fetch payments config', await r.text());
+          return;
+        }
+        const data = await r.json();
+        setConfig(data);
+      } catch (err) {
+        console.error('Failed to fetch payments config', err);
+      }
+    };
+    loadConfig();
   }, []);
 
   const options = config?.provider === 'manual' ? NETWORKS : [config?.network || ''];
