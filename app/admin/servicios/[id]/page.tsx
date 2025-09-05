@@ -2,8 +2,7 @@ import { prisma } from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
+import { saveImage } from '@/lib/upload';
 
 export default async function EditServicio({
   params,
@@ -25,16 +24,10 @@ export default async function EditServicio({
     });
     const image = formData.get('image') as File | null;
     if (image && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const ext = path.extname(image.name) || '.png';
-      const filename = `${params.id}${ext}`;
-      const uploadDir = path.join(process.cwd(), 'public', 'services');
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
+      const url = await saveImage(image, 'services', params.id);
       await prisma.service.update({
         where: { id: params.id },
-        data: { imageUrl: `/services/${filename}` },
+        data: { imageUrl: url },
       });
     }
     redirect('/admin/servicios');

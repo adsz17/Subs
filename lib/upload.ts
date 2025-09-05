@@ -3,11 +3,16 @@ import path from 'path';
 import { env } from '@/env.mjs';
 import { v2 as cloudinary } from 'cloudinary';
 
-export async function saveLogo(file: File, id: string): Promise<string> {
+export async function saveImage(
+  file: File,
+  folder: string,
+  id?: string
+): Promise<string> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const ext = path.extname(file.name) || '.png';
-  const filename = `${id}${ext}`;
+  const uniqueId = id || Date.now().toString();
+  const filename = `${uniqueId}${ext}`;
 
   if (
     env.CLOUDINARY_CLOUD_NAME &&
@@ -20,9 +25,11 @@ export async function saveLogo(file: File, id: string): Promise<string> {
       api_secret: env.CLOUDINARY_API_SECRET,
     });
 
+    const publicId = `${folder}/${uniqueId}`;
+
     const result = await new Promise<any>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { public_id: `logos/${id}` },
+        { public_id: publicId },
         (error, res) => {
           if (error || !res) return reject(error);
           resolve(res);
@@ -34,9 +41,9 @@ export async function saveLogo(file: File, id: string): Promise<string> {
     return result.secure_url as string;
   }
 
-  const uploadDir = path.join(process.cwd(), 'public', 'logos');
+  const uploadDir = path.join(process.cwd(), 'public', folder);
   await mkdir(uploadDir, { recursive: true });
   await writeFile(path.join(uploadDir, filename), buffer);
-  return `/logos/${filename}`;
+  return `/${folder}/${filename}`;
 }
 

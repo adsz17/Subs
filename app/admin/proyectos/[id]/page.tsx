@@ -2,8 +2,7 @@ import { prisma } from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
+import { saveImage } from '@/lib/upload';
 
 export default async function EditProyecto({ params }: { params: { id: string } }) {
   const project = await prisma.project.findUnique({ where: { id: params.id } });
@@ -15,16 +14,10 @@ export default async function EditProyecto({ params }: { params: { id: string } 
     await prisma.project.update({ where: { id: params.id }, data: { title } });
     const image = formData.get('image') as File | null;
     if (image && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const ext = path.extname(image.name) || '.png';
-      const filename = `${params.id}${ext}`;
-      const uploadDir = path.join(process.cwd(), 'public', 'projects');
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
+      const url = await saveImage(image, 'projects', params.id);
       await prisma.project.update({
         where: { id: params.id },
-        data: { imageUrl: `/projects/${filename}` },
+        data: { imageUrl: url },
       });
     }
     redirect('/admin/proyectos');

@@ -2,7 +2,7 @@ import { prisma } from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
-import { saveLogo } from '@/lib/upload';
+import { saveImage } from '@/lib/upload';
 
 export default async function EditLogo({ params }: { params: { id: string } }) {
   const logo = await prisma.logo.findUnique({ where: { id: params.id } });
@@ -12,7 +12,7 @@ export default async function EditLogo({ params }: { params: { id: string } }) {
     'use server';
     const image = formData.get('image') as File | null;
     if (image && image.size > 0) {
-      const url = await saveLogo(image, params.id);
+      const url = await saveImage(image, 'logos', params.id);
       await prisma.logo.update({ where: { id: params.id }, data: { imageUrl: url } });
     }
     redirect('/admin/logos');

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { saveLogo } from '@/lib/upload';
+import { saveImage } from '@/lib/upload';
 
 export default function NuevoLogo() {
   async function create(formData: FormData) {
@@ -8,7 +8,7 @@ export default function NuevoLogo() {
     const image = formData.get('image') as File | null;
     if (!image || image.size === 0) return;
     const logo = await prisma.logo.create({ data: { imageUrl: '' } });
-    const url = await saveLogo(image, logo.id);
+    const url = await saveImage(image, 'logos', logo.id);
     await prisma.logo.update({ where: { id: logo.id }, data: { imageUrl: url } });
     redirect('/admin/logos');
   }
