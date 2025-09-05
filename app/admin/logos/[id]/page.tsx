@@ -20,7 +20,7 @@ export default async function EditLogo({ params }: { params: { id: string } }) {
 
   async function remove() {
     'use server';
-    await prisma.logo.delete({ where: { id: params.id } });
+    await prisma.logo.deleteMany({ where: { id: params.id } });
     redirect('/admin/logos');
   }
 
