@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
+import { saveImage } from '@/lib/upload';
 
 export default function NuevoProyecto() {
   async function create(formData: FormData) {
@@ -11,16 +10,10 @@ export default function NuevoProyecto() {
     if (!title) return;
     const project = await prisma.project.create({ data: { title, imageUrl: '' } });
     if (image && image.size > 0) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const ext = path.extname(image.name) || '.png';
-      const filename = `${project.id}${ext}`;
-      const uploadDir = path.join(process.cwd(), 'public', 'projects');
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
+      const url = await saveImage(image, 'projects', project.id);
       await prisma.project.update({
         where: { id: project.id },
-        data: { imageUrl: `/projects/${filename}` },
+        data: { imageUrl: url },
       });
     }
     redirect('/admin/proyectos');

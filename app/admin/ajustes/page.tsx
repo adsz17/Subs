@@ -1,7 +1,6 @@
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { prisma } from '@/lib/db';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
+import { saveImage } from '@/lib/upload';
 
 export default async function AjustesPage() {
   const configs = await prisma.paymentsConfig.findMany();
@@ -13,14 +12,7 @@ export default async function AjustesPage() {
     const qr = formData.get('qr') as File | null;
     let qrUrl: string | undefined;
     if (qr && qr.size > 0) {
-      const bytes = await qr.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const ext = path.extname(qr.name) || '.png';
-      const filename = `${Date.now()}${ext}`;
-      const uploadDir = path.join(process.cwd(), 'public', 'payments');
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
-      qrUrl = `/payments/${filename}`;
+      qrUrl = await saveImage(qr, 'payments');
     }
     await prisma.paymentsConfig.create({
       data: { network, wallet, qrUrl },
@@ -35,14 +27,7 @@ export default async function AjustesPage() {
     const qr = formData.get('qr') as File | null;
     let qrUrl: string | undefined;
     if (qr && qr.size > 0) {
-      const bytes = await qr.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const ext = path.extname(qr.name) || '.png';
-      const filename = `${Date.now()}${ext}`;
-      const uploadDir = path.join(process.cwd(), 'public', 'payments');
-      await mkdir(uploadDir, { recursive: true });
-      await writeFile(path.join(uploadDir, filename), buffer);
-      qrUrl = `/payments/${filename}`;
+      qrUrl = await saveImage(qr, 'payments');
     }
     await prisma.paymentsConfig.update({
       where: { id },
