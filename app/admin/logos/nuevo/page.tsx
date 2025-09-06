@@ -15,7 +15,7 @@ export default function NuevoLogo() {
   }
 
   return (
-    <form action={create} className="max-w-lg space-y-3 bg-white p-4">
+    <form action={create} encType="multipart/form-data" className="max-w-lg space-y-3 bg-white p-4">
       <h1 className="text-xl font-bold">Nuevo logo</h1>
       <ImageUploadField folder="logos" />
       <button className="btn" type="submit">Crear</button>

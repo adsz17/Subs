@@ -39,6 +39,7 @@ export default async function EditLogo({ params }: { params: { id: string } }) {
       <Breadcrumbs items={[{ label: 'Logos', href: '/admin/logos' }, { label: 'Editar' }]} />
       <form
         action={update}
+        encType="multipart/form-data"
         className="mx-auto mt-4 max-w-lg space-y-4 rounded-md bg-white p-4 shadow"
       >
         <div className="space-y-2">
