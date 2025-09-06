@@ -14,7 +14,7 @@ export default async function EditLogo({ params }: { params: { id: string } }) {
     const imageUrl = formData.get('imageUrl') as string | null;
     const imagePublicId = formData.get('imagePublicId') as string | null;
     if (imageUrl) {
-      if (logo.imagePublicId) {
+      if (logo?.imagePublicId) {
         await cloudinary.uploader.destroy(logo.imagePublicId);
       }
       await prisma.logo.update({
@@ -27,7 +27,7 @@ export default async function EditLogo({ params }: { params: { id: string } }) {
 
   async function remove() {
     'use server';
-    if (logo.imagePublicId) {
+    if (logo?.imagePublicId) {
       await cloudinary.uploader.destroy(logo.imagePublicId);
     }
     await prisma.logo.deleteMany({ where: { id: params.id } });
