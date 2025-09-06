@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { useToast } from './Toast';
+import { useFormContext } from 'react-hook-form';
 
 interface Props {
   folder: string;
@@ -16,6 +17,12 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
   const imageUrlRef = useRef<HTMLInputElement>(null);
   const imagePublicIdRef = useRef<HTMLInputElement>(null);
   const { add } = useToast();
+  let form: ReturnType<typeof useFormContext> | null = null;
+  try {
+    form = useFormContext();
+  } catch {
+    form = null;
+  }
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -41,6 +48,18 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
       if (!res.ok) throw new Error(data.error || 'Error');
       if (imageUrlRef.current) imageUrlRef.current.value = data.secure_url;
       if (imagePublicIdRef.current) imagePublicIdRef.current.value = data.public_id;
+      if (form) {
+        form.setValue('imageUrl', data.secure_url, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+        form.setValue('imagePublicId', data.public_id, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
       setPreview(data.secure_url);
       add('Imagen subida');
     } catch (err) {

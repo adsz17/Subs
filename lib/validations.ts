@@ -14,6 +14,11 @@ export const serviceSchema = z.object({
   isActive: z.boolean().default(true)
 });
 
+export const logoSchema = z.object({
+  imageUrl: z.string().url(),
+  imagePublicId: z.string().optional()
+});
+
 export const priceSchema = z.object({
   serviceId: z.string().cuid(),
   amountCents: z.number().int().nonnegative(),
