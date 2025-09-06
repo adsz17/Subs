@@ -50,3 +50,20 @@ npm run test:e2e
 
 ## Deploy
 Usa el `Dockerfile` y `render.yaml` como referencia para producción.
+
+## Configurar Cloudinary
+
+Para manejar todas las imágenes en producción se utiliza [Cloudinary](https://cloudinary.com/).
+Define en tu `.env` las variables:
+
+```
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+# Opcional si usas uploads unsigned
+CLOUDINARY_UPLOAD_PRESET=
+```
+
+Si se define `CLOUDINARY_UPLOAD_PRESET` los uploads se realizan sin firma.
+En plataformas como Render el filesystem es efímero, por lo que las
+imágenes siempre se almacenan en Cloudinary.

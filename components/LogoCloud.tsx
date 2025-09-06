@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { unstable_noStore as noStore } from 'next/cache';
+import Image from 'next/image';
 
 export async function LogoCloud() {
   noStore();
@@ -8,10 +9,12 @@ export async function LogoCloud() {
     <section className="mx-auto max-w-7xl px-4 pt-[var(--section-pt)] pb-[var(--section-pb)]">
       <div className="flex flex-wrap items-center justify-center gap-6 opacity-70">
         {logos.map((l) => (
-          <img
+          <Image
             key={l.id}
             src={l.imageUrl}
             alt="Logo"
+            width={160}
+            height={40}
             className="h-10 w-auto"
           />
         ))}
