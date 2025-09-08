@@ -19,6 +19,7 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
   const { add } = useToast();
   let form: ReturnType<typeof useFormContext> | null = null;
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     form = useFormContext();
   } catch {
     form = null;

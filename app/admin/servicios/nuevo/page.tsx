@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { saveImage } from '@/lib/upload';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
 
 export default function NuevoServicio() {
   async function create(formData: FormData) {
@@ -9,18 +9,18 @@ export default function NuevoServicio() {
     const name = String(formData.get('name') || '');
     const slug = String(formData.get('slug') || '');
     const description = String(formData.get('description') || '');
-    const image = formData.get('image') as File | null;
+    const imageUrl = formData.get('imageUrl') as string | null;
     const currency = String(formData.get('currency') || 'USD');
     const amount = Number(formData.get('amount') || 0);
     if (!name || !slug) return;
-    const service = await prisma.service.create({ data: { name, slug, description } });
-    if (image && image.size > 0) {
-      const url = await saveImage(image, 'services', service.id);
-      await prisma.service.update({
-        where: { id: service.id },
-        data: { imageUrl: url }
-      });
-    }
+    const service = await prisma.service.create({
+      data: {
+        name,
+        slug,
+        description,
+        imageUrl: imageUrl || undefined,
+      },
+    });
     if (amount > 0) {
       const now = new Date();
       await prisma.price.create({
@@ -48,12 +48,12 @@ export default function NuevoServicio() {
   }
 
   return (
-    <form action={create} encType="multipart/form-data" className="max-w-lg space-y-3 bg-white p-4 text-black">
+    <form action={create} className="max-w-lg space-y-3 bg-white p-4 text-black">
       <h1 className="text-xl font-bold">Nuevo servicio</h1>
       <input className="border p-2 w-full" name="name" placeholder="Nombre" />
       <input className="border p-2 w-full" name="slug" placeholder="slug-unico" />
       <textarea className="border p-2 w-full" name="description" placeholder="Descripción" />
-      <input className="border p-2 w-full" type="file" accept="image/*" name="image" />
+      <ImageUploadField folder="services" />
       <div className="flex gap-2">
         <input className="border p-2 w-full" name="currency" defaultValue="USD" />
         <input className="border p-2 w-full" name="amount" type="number" step="0.01" placeholder="Precio" />
