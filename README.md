@@ -24,11 +24,8 @@ npm run db:seed
 npm run dev
 ```
 
-El script de seeds crea:
-- Configuración inicial con proveedor de pagos Coinbase y moneda USD.
-- Usuario administrador `admin@demo.com` / contraseña `Admin123!`.
-- Tres servicios de ejemplo con precios vigentes.
-- Cupón de bienvenida `BIENVENIDA10`.
+El script de seed crea:
+- Usuario administrador `subscripcion.info@gmail.com` / contraseña `Suscripciones8778!`.
 Cambiar las credenciales después del primer inicio de sesión.
 
 ## Variables de entorno
