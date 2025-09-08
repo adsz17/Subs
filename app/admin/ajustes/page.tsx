@@ -1,6 +1,6 @@
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { prisma } from '@/lib/db';
-import { saveImage } from '@/lib/upload';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
 
 export default async function AjustesPage() {
   const configs = await prisma.paymentsConfig.findMany();
@@ -9,13 +9,9 @@ export default async function AjustesPage() {
     'use server';
     const network = String(formData.get('network') || '');
     const wallet = String(formData.get('wallet') || '');
-    const qr = formData.get('qr') as File | null;
-    let qrUrl: string | undefined;
-    if (qr && qr.size > 0) {
-      qrUrl = await saveImage(qr, 'payments');
-    }
+    const qrUrl = formData.get('imageUrl') as string | null;
     await prisma.paymentsConfig.create({
-      data: { network, wallet, qrUrl },
+      data: { network, wallet, qrUrl: qrUrl || undefined },
     });
   }
 
@@ -24,11 +20,7 @@ export default async function AjustesPage() {
     const id = Number(formData.get('id'));
     const network = String(formData.get('network') || '');
     const wallet = String(formData.get('wallet') || '');
-    const qr = formData.get('qr') as File | null;
-    let qrUrl: string | undefined;
-    if (qr && qr.size > 0) {
-      qrUrl = await saveImage(qr, 'payments');
-    }
+    const qrUrl = formData.get('imageUrl') as string | null;
     await prisma.paymentsConfig.update({
       where: { id },
       data: {
@@ -51,7 +43,7 @@ export default async function AjustesPage() {
 
       {configs.map((cfg) => (
         <div key={cfg.id} className="space-y-2 rounded-2xl bg-white p-6 shadow">
-          <form action={update} encType="multipart/form-data" className="space-y-4">
+          <form action={update} className="space-y-4">
             <input type="hidden" name="id" value={cfg.id} />
             <div>
               <label className="block text-sm font-medium text-gray-700">Red</label>
@@ -71,10 +63,7 @@ export default async function AjustesPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Código QR</label>
-              {cfg.qrUrl && (
-                <img src={cfg.qrUrl} alt="QR actual" className="mb-2 h-32 w-32 object-cover" />
-              )}
-              <input type="file" accept="image/*" name="qr" className="mt-1 w-full border p-2" />
+              <ImageUploadField folder="payments" initialUrl={cfg.qrUrl || undefined} />
             </div>
             <button type="submit" className="btn">
               Guardar
@@ -89,7 +78,7 @@ export default async function AjustesPage() {
         </div>
       ))}
 
-      <form action={create} encType="multipart/form-data" className="space-y-4 rounded-2xl bg-white p-6 shadow">
+      <form action={create} className="space-y-4 rounded-2xl bg-white p-6 shadow">
         <div>
           <label className="block text-sm font-medium text-gray-700">Red</label>
           <input name="network" className="mt-1 w-full border p-2" />
@@ -100,7 +89,7 @@ export default async function AjustesPage() {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">Código QR</label>
-          <input type="file" accept="image/*" name="qr" className="mt-1 w-full border p-2" />
+          <ImageUploadField folder="payments" />
         </div>
         <button type="submit" className="btn">
           Agregar

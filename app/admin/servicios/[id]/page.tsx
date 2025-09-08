@@ -2,7 +2,7 @@ import { prisma } from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
-import { saveImage } from '@/lib/upload';
+import { ImageUploadField } from '@/components/admin/ImageUploadField';
 
 export default async function EditServicio({
   params,
@@ -18,18 +18,17 @@ export default async function EditServicio({
     const slug = String(formData.get('slug') || '');
     const description = String(formData.get('description') || '');
     const isActive = formData.get('isActive') === 'on';
+    const imageUrl = formData.get('imageUrl') as string | null;
     await prisma.service.update({
       where: { id: params.id },
-      data: { name, slug, description, isActive },
+      data: {
+        name,
+        slug,
+        description,
+        isActive,
+        ...(imageUrl ? { imageUrl } : {}),
+      },
     });
-    const image = formData.get('image') as File | null;
-    if (image && image.size > 0) {
-      const url = await saveImage(image, 'services', params.id);
-      await prisma.service.update({
-        where: { id: params.id },
-        data: { imageUrl: url },
-      });
-    }
     redirect('/admin/servicios');
   }
 
@@ -49,7 +48,6 @@ export default async function EditServicio({
       />
       <form
         action={update}
-        encType="multipart/form-data"
         className="mx-auto mt-4 max-w-lg space-y-4 rounded-md bg-white p-4 shadow dark:bg-gray-900"
       >
         <div className="space-y-2">
@@ -89,20 +87,7 @@ export default async function EditServicio({
           <label htmlFor="image" className="block text-sm font-medium">
             Imagen
           </label>
-          {service.imageUrl && (
-            <img
-              src={service.imageUrl}
-              alt=""
-              className="mb-2 h-32 w-auto object-contain"
-            />
-          )}
-          <input
-            id="image"
-            name="image"
-            type="file"
-            accept="image/*"
-            className="w-full rounded-md border p-2 bg-white dark:bg-gray-950 dark:text-white"
-          />
+          <ImageUploadField folder="services" initialUrl={service.imageUrl || undefined} />
         </div>
         <div className="flex items-center gap-2">
           <input
