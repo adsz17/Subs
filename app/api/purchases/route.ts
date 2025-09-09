@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
@@ -24,11 +26,13 @@ export async function POST(req: NextRequest) {
   if (!cart) {
     return NextResponse.json({ error: 'Cart not found' }, { status: 404 });
   }
+  const session = await getServerSession(authOptions);
   const purchase = await prisma.purchase.create({
     data: {
       status: 'PENDING',
       txHash,
       network,
+      userId: session?.user?.id,
       items: {
         create: cart.items.map((item) => ({
           serviceId: item.serviceId,
