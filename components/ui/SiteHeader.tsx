@@ -15,6 +15,9 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-4">
           <ThemeToggle />
+          <Link href="/compras" className="text-sm font-medium">
+            Mis compras
+          </Link>
           <Link
             href="/carrito"
             className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
