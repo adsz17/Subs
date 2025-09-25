@@ -16,7 +16,8 @@ function buildRegisterUrl(email: string, next: string) {
 export function LoginForm() {
   const router = useRouter();
   const search = useSearchParams();
-  const next = search.get('next') || '/servicios';
+  const nextParam = search.get('next') ?? search.get('redirect');
+  const next = nextParam && nextParam.startsWith('/') ? nextParam : '/servicios';
   const [email, setEmail] = useState(() => search.get('email') || '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
