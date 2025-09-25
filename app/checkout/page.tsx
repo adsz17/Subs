@@ -7,7 +7,7 @@ import { authOptions } from '@/lib/auth';
 export default async function CheckoutPage() {
   const session = await getServerSession(authOptions);
   if (!session) {
-    redirect('/login?redirect=/checkout');
+    redirect('/login?next=/checkout');
   }
   return (
     <Suspense fallback={null}>
