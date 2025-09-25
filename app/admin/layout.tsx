@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = (await getServerSession(authOptions)) as Session | null;
   if (!session || session.user.role !== 'ADMIN') {
-    redirect('/auth/login');
+    redirect('/login');
   }
   return (
     <div className={`${playfair.variable} ${inter.variable}`}>

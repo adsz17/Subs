@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: env.NEXTAUTH_SECRET });
   const role = (token as any)?.role;
   if (!token || !['ADMIN', 'STAFF'].includes(role)) {
-    return NextResponse.redirect(new URL('/auth/login', req.url));
+    return NextResponse.redirect(new URL('/login', req.url));
   }
   return NextResponse.next();
 }
