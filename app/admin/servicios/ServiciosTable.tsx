@@ -5,9 +5,7 @@ import { DataTable } from '@/components/admin/DataTable';
 import { StatusBadge } from '@/components/admin/StatusBadge';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { Service, Price } from '@prisma/client';
-
-export type ServiceWithPrices = Service & { prices: Price[] };
+import { buildDuplicatePayload, toPayload, type ServiceWithPrices } from './payloads';
 
 const columns: ColumnDef<ServiceWithPrices>[] = [
   { accessorKey: 'name', header: 'Nombre', enableSorting: true },
@@ -49,17 +47,6 @@ const columns: ColumnDef<ServiceWithPrices>[] = [
 export function ServiciosTable({ data }: { data: ServiceWithPrices[] }) {
   const router = useRouter();
 
-  const toPayload = (
-    service: ServiceWithPrices,
-    overrides?: Partial<Pick<Service, 'isActive'>>,
-  ) => ({
-    name: service.name,
-    slug: service.slug,
-    description: service.description ?? undefined,
-    imageUrl: service.imageUrl ?? undefined,
-    isActive: overrides?.isActive ?? service.isActive,
-  });
-
   const bulkActivate = async (rows: ServiceWithPrices[], isActive: boolean) => {
     await Promise.all(
       rows.map((service) =>
@@ -80,13 +67,9 @@ export function ServiciosTable({ data }: { data: ServiceWithPrices[] }) {
         fetch('/api/services', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: `${service.name} (copia)`,
-            slug: `${service.slug}-${timestamp}-${index}`,
-            description: service.description ?? undefined,
-            imageUrl: service.imageUrl ?? undefined,
-            isActive: service.isActive,
-          }),
+          body: JSON.stringify(
+            buildDuplicatePayload(service, `${timestamp}-${index}`),
+          ),
         })
       )
     );
@@ -123,4 +106,6 @@ export function ServiciosTable({ data }: { data: ServiceWithPrices[] }) {
     />
   );
 }
+
+export type { ServiceWithPrices } from './payloads';
 

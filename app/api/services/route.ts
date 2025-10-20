@@ -13,6 +13,16 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json(parsed.error.flatten(), { status: 400 });
   }
-  const service = await prisma.service.create({ data: parsed.data });
+  const { name, slug, description, content, imageUrl, isActive } = parsed.data;
+  const service = await prisma.service.create({
+    data: {
+      name,
+      slug,
+      description,
+      content,
+      imageUrl,
+      isActive,
+    },
+  });
   return NextResponse.json(service);
 }

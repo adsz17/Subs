@@ -10,6 +10,7 @@ export const serviceSchema = z.object({
   name: z.string().min(1),
   slug: z.string().min(1),
   description: z.string().optional(),
+  content: z.string().optional(),
   imageUrl: z.string().url().optional(),
   isActive: z.boolean().default(true)
 });
