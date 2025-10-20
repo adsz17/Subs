@@ -37,7 +37,7 @@ export function TestimonialsCarousel({ testimonials }: TestimonialsCarouselProps
         slides: { perView: 3, spacing: 24 },
       },
     },
-    animation: { duration: 1200 },
+    defaultAnimation: { duration: 1200 },
     dragSpeed: 1,
   });
 
