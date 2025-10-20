@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
   variant?: 'default' | 'outline' | 'ghost';
-  size?: 'default' | 'icon';
+  size?: 'default' | 'icon' | 'sm';
 }
 
 const baseClasses =
@@ -19,6 +19,7 @@ const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
 
 const sizes: Record<NonNullable<ButtonProps['size']>, string> = {
   default: 'px-4 py-2',
+  sm: 'px-3 py-1.5',
   icon: 'h-10 w-10'
 };
 
