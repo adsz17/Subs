@@ -87,7 +87,7 @@ model Service {
   slug          String         @unique
   name          String
   description   String?
-  content       String?        @db.Text
+  content       Json?
   imageUrl      String?
   isActive      Boolean        @default(true)
   prices        Price[]

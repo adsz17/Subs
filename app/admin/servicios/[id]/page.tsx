@@ -3,6 +3,9 @@ import { notFound, redirect } from 'next/navigation';
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
+import { ContentBuilder } from '@/components/admin/ContentBuilder';
+import { Prisma } from '@prisma/client';
+import { randomUUID } from 'crypto';
 
 export default async function EditServicio({
   params,
@@ -12,12 +15,34 @@ export default async function EditServicio({
   const service = await prisma.service.findUnique({ where: { id: params.id } });
   if (!service) notFound();
 
+  function parseContent(value: FormDataEntryValue | null): Prisma.JsonValue | null {
+    if (!value || typeof value !== 'string' || !value.trim()) {
+      return null;
+    }
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      return {
+        version: 1,
+        metadata: { legacyMarkdown: true },
+        sections: [
+          {
+            id: randomUUID(),
+            layout: 'markdown',
+            title: 'Contenido migrado',
+            body: value,
+          },
+        ],
+      } satisfies Prisma.JsonValue;
+    }
+  }
+
   async function update(formData: FormData) {
     'use server';
     const name = String(formData.get('name') || '');
     const slug = String(formData.get('slug') || '');
     const description = String(formData.get('description') || '');
-    const content = String(formData.get('content') || '');
+    const content = parseContent(formData.get('content'));
     const isActive = formData.get('isActive') === 'on';
     const imageUrl = formData.get('imageUrl') as string | null;
     await prisma.service.update({
@@ -26,7 +51,7 @@ export default async function EditServicio({
         name,
         slug,
         description,
-        content: content ? content : null,
+        content,
         isActive,
         ...(imageUrl ? { imageUrl } : {}),
       },
@@ -87,15 +112,9 @@ export default async function EditServicio({
         </div>
         <div className="space-y-2">
           <label htmlFor="content" className="block text-sm font-medium">
-            Contenido enriquecido (Markdown)
+            Contenido enriquecido
           </label>
-          <textarea
-            id="content"
-            name="content"
-            defaultValue={service.content || ''}
-            rows={12}
-            className="w-full rounded-md border p-2 bg-white dark:bg-gray-950 dark:text-white"
-          />
+          <ContentBuilder name="content" defaultValue={service.content} />
         </div>
         <div className="space-y-2">
           <label htmlFor="image" className="block text-sm font-medium">
