@@ -17,6 +17,7 @@ export default async function EditServicio({
     const name = String(formData.get('name') || '');
     const slug = String(formData.get('slug') || '');
     const description = String(formData.get('description') || '');
+    const content = String(formData.get('content') || '');
     const isActive = formData.get('isActive') === 'on';
     const imageUrl = formData.get('imageUrl') as string | null;
     await prisma.service.update({
@@ -25,6 +26,7 @@ export default async function EditServicio({
         name,
         slug,
         description,
+        content: content ? content : null,
         isActive,
         ...(imageUrl ? { imageUrl } : {}),
       },
@@ -80,6 +82,18 @@ export default async function EditServicio({
             id="description"
             name="description"
             defaultValue={service.description || ''}
+            className="w-full rounded-md border p-2 bg-white dark:bg-gray-950 dark:text-white"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="content" className="block text-sm font-medium">
+            Contenido enriquecido (Markdown)
+          </label>
+          <textarea
+            id="content"
+            name="content"
+            defaultValue={service.content || ''}
+            rows={12}
             className="w-full rounded-md border p-2 bg-white dark:bg-gray-950 dark:text-white"
           />
         </div>
