@@ -9,7 +9,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './')
+      '@': path.resolve(__dirname, './'),
+      'react-markdown': path.resolve(__dirname, 'tests/__mocks__/react-markdown.ts'),
+      'remark-gfm': path.resolve(__dirname, 'tests/__mocks__/remark-gfm.ts'),
+      'rehype-sanitize': path.resolve(__dirname, 'tests/__mocks__/rehype-sanitize.ts')
     }
   }
 });
