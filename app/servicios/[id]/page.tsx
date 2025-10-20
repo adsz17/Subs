@@ -1,3 +1,4 @@
+import React from 'react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
@@ -319,17 +320,33 @@ export default async function ServiceDetailPage({ params }: Props) {
   if (!session?.user) {
     redirect(`/login?next=/servicios/${params.id}`);
   }
-  const purchased = await prisma.purchaseItem.findFirst({
+  const approvedPurchase = await prisma.purchaseItem.findFirst({
     where: {
       serviceId: service.id,
-      purchase: { userId: session.user.id }
+      purchase: {
+        userId: session.user.id,
+        status: PurchaseStatus.APPROVED
+      }
     }
   });
-  if (!purchased) {
+  if (!approvedPurchase) {
+    const pendingPurchase = await prisma.purchaseItem.findFirst({
+      where: {
+        serviceId: service.id,
+        purchase: {
+          userId: session.user.id,
+          status: PurchaseStatus.PENDING
+        }
+      }
+    });
     return (
       <div className="container py-8">
         <h1 className="mb-4 text-3xl font-bold">{service.name}</h1>
-        <p>No has comprado este servicio todavía.</p>
+        <p>
+          {pendingPurchase
+            ? 'Tu compra está en revisión. Te avisaremos cuando sea aprobada.'
+            : 'No has comprado este servicio todavía.'}
+        </p>
       </div>
     );
   }

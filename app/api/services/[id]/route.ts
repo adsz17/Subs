@@ -16,7 +16,18 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   if (!parsed.success) {
     return NextResponse.json(parsed.error.flatten(), { status: 400 });
   }
-  const service = await prisma.service.update({ where: { id: params.id }, data: parsed.data });
+  const { name, slug, description, content, imageUrl, isActive } = parsed.data;
+  const service = await prisma.service.update({
+    where: { id: params.id },
+    data: {
+      name,
+      slug,
+      description,
+      content,
+      imageUrl,
+      isActive,
+    },
+  });
   return NextResponse.json(service);
 }
 
