@@ -9,6 +9,7 @@ export default function NuevoServicio() {
     const name = String(formData.get('name') || '');
     const slug = String(formData.get('slug') || '');
     const description = String(formData.get('description') || '');
+    const content = String(formData.get('content') || '');
     const imageUrl = formData.get('imageUrl') as string | null;
     const currency = String(formData.get('currency') || 'USD');
     const amount = Number(formData.get('amount') || 0);
@@ -18,6 +19,7 @@ export default function NuevoServicio() {
         name,
         slug,
         description,
+        content: content ? content : undefined,
         imageUrl: imageUrl || undefined,
       },
     });
@@ -53,6 +55,12 @@ export default function NuevoServicio() {
       <input className="border p-2 w-full" name="name" placeholder="Nombre" />
       <input className="border p-2 w-full" name="slug" placeholder="slug-unico" />
       <textarea className="border p-2 w-full" name="description" placeholder="Descripción" />
+      <textarea
+        className="border p-2 w-full"
+        name="content"
+        placeholder="Contenido enriquecido (Markdown)"
+        rows={10}
+      />
       <ImageUploadField folder="services" />
       <div className="flex gap-2">
         <input className="border p-2 w-full" name="currency" defaultValue="USD" />
