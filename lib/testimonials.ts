@@ -18,7 +18,7 @@ type RemoteTestimonial = {
   rating?: number;
 };
 
-const REMOTE_TESTIMONIALS_URL = 'https://testimonialapi.toolcarton.com/api';
+const REMOTE_TESTIMONIALS_URL = process.env.REMOTE_TESTIMONIALS_URL?.trim();
 
 const FALLBACK_TESTIMONIALS: Testimonial[] = [
   {
@@ -45,40 +45,46 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
   },
 ];
 
+let hasLoggedRemoteError = false;
+
 export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
-  try {
-    const response = await fetch(REMOTE_TESTIMONIALS_URL, {
-      cache: 'force-cache',
-      next: { revalidate: 60 * 60 },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Remote testimonials returned ${response.status}`);
-    }
-
-    const rawData = (await response.json()) as RemoteTestimonial[];
-
-    const testimonials = rawData
-      .filter((item) => Boolean(item.message && item.name))
-      .map<Testimonial>((item, index) => {
-        const parsedRating = Number(item.rating ?? 5);
-        const rating = Number.isFinite(parsedRating) ? parsedRating : 5;
-
-        return {
-          id: String(item.id ?? `remote-${index}`),
-          name: item.name?.trim() ?? 'Cliente',
-          role: item.designation?.trim(),
-          message: item.message?.trim() ?? '',
-          avatarUrl: item.avatar?.trim(),
-          rating: Math.min(Math.max(rating, 1), 5),
-        };
+  if (REMOTE_TESTIMONIALS_URL) {
+    try {
+      const response = await fetch(REMOTE_TESTIMONIALS_URL, {
+        next: { revalidate: 60 * 60 },
       });
 
-    if (testimonials.length > 0) {
-      return testimonials;
+      if (!response.ok) {
+        throw new Error(`Remote testimonials returned ${response.status}`);
+      }
+
+      const rawData = (await response.json()) as RemoteTestimonial[];
+
+      const testimonials = rawData
+        .filter((item) => Boolean(item.message && item.name))
+        .map<Testimonial>((item, index) => {
+          const parsedRating = Number(item.rating ?? 5);
+          const rating = Number.isFinite(parsedRating) ? parsedRating : 5;
+
+          return {
+            id: String(item.id ?? `remote-${index}`),
+            name: item.name?.trim() ?? 'Cliente',
+            role: item.designation?.trim(),
+            message: item.message?.trim() ?? '',
+            avatarUrl: item.avatar?.trim(),
+            rating: Math.min(Math.max(rating, 1), 5),
+          };
+        });
+
+      if (testimonials.length > 0) {
+        return testimonials;
+      }
+    } catch (error) {
+      if (!hasLoggedRemoteError) {
+        console.error('Error fetching remote testimonials', error);
+        hasLoggedRemoteError = true;
+      }
     }
-  } catch (error) {
-    console.error('Error fetching remote testimonials', error);
   }
 
   return FALLBACK_TESTIMONIALS;
