@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   }
   const { name, email, message } = parsed.data;
   try {
-    await prisma.contactMessage.create({ data: { name, email, message } });
+    const contactMessage = await prisma.contactMessage.create({ data: { name, email, message } });
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
@@ -39,8 +39,9 @@ export async function POST(req: Request) {
         text: message
       });
     }
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, ticketId: contactMessage.id });
   } catch (e) {
+    console.error('Error handling contact form submission', e);
     return NextResponse.json({ error: 'Error sending message' }, { status: 500 });
   }
 }
