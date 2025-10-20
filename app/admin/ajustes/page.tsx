@@ -1,6 +1,7 @@
 import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { prisma } from '@/lib/db';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
+import { revalidatePath } from 'next/cache';
 
 export default async function AjustesPage() {
   const configs = await prisma.paymentsConfig.findMany();
@@ -34,7 +35,11 @@ export default async function AjustesPage() {
   async function remove(formData: FormData) {
     'use server';
     const id = Number(formData.get('id'));
-    await prisma.paymentsConfig.delete({ where: { id } });
+    const result = await prisma.paymentsConfig.deleteMany({ where: { id } });
+    if (!result.count) {
+      return;
+    }
+    revalidatePath('/admin/ajustes');
   }
 
   return (
