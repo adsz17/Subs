@@ -4,7 +4,6 @@ import { Breadcrumbs } from '@/components/admin/Breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { ContentBuilder } from '@/components/admin/ContentBuilder';
-import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
 export default async function EditServicio({
@@ -15,14 +14,14 @@ export default async function EditServicio({
   const service = await prisma.service.findUnique({ where: { id: params.id } });
   if (!service) notFound();
 
-  function parseContent(value: FormDataEntryValue | null): Prisma.JsonValue | null {
+  function parseContent(value: FormDataEntryValue | null): string | null {
     if (!value || typeof value !== 'string' || !value.trim()) {
       return null;
     }
     try {
-      return JSON.parse(value);
+      return JSON.stringify(JSON.parse(value));
     } catch (error) {
-      return {
+      return JSON.stringify({
         version: 1,
         metadata: { legacyMarkdown: true },
         sections: [
@@ -33,7 +32,7 @@ export default async function EditServicio({
             body: value,
           },
         ],
-      } satisfies Prisma.JsonValue;
+      });
     }
   }
 
