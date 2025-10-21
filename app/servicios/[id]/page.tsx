@@ -47,7 +47,7 @@ function parseStructuredContent(raw: unknown): RenderableContent {
   const data = candidate as Record<string, unknown>;
   const sectionsInput = Array.isArray(data.sections) ? data.sections : [];
 
-  const sections: ServiceContentSection[] = sectionsInput
+  const sections = sectionsInput
     .map((section, sectionIndex) => {
       if (!section || typeof section !== 'object') return null;
       const layout = (section as Record<string, unknown>).layout;
