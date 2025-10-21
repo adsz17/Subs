@@ -50,7 +50,8 @@ function parseStructuredContent(raw: unknown): RenderableContent {
   const sections = sectionsInput
     .map((section, sectionIndex) => {
       if (!section || typeof section !== 'object') return null;
-      const layout = (section as Record<string, unknown>).layout;
+      const sectionRecord = section as Record<string, unknown>;
+      const layout = sectionRecord.layout;
       if (
         layout !== 'text' &&
         layout !== 'cards' &&
@@ -60,7 +61,7 @@ function parseStructuredContent(raw: unknown): RenderableContent {
         return null;
       }
 
-      const resourcesRaw = (section as Record<string, unknown>).resources;
+      const resourcesRaw = sectionRecord.resources;
       const resources = Array.isArray(resourcesRaw)
         ? resourcesRaw
             .map((resource, resourceIndex) => {
@@ -81,7 +82,7 @@ function parseStructuredContent(raw: unknown): RenderableContent {
             .filter((resource): resource is NonNullable<typeof resource> => Boolean(resource))
         : undefined;
 
-      const itemsRaw = (section as Record<string, unknown>).items;
+      const itemsRaw = sectionRecord.items;
       const items = Array.isArray(itemsRaw)
         ? itemsRaw
             .map((item, itemIndex) => {
@@ -124,7 +125,7 @@ function parseStructuredContent(raw: unknown): RenderableContent {
             .filter((item): item is NonNullable<typeof item> => Boolean(item))
         : undefined;
 
-      const mediaRaw = (section as Record<string, unknown>).media as
+      const mediaRaw = sectionRecord.media as
         | Record<string, unknown>
         | undefined;
       let media: ServiceContentMedia | undefined;
@@ -145,18 +146,18 @@ function parseStructuredContent(raw: unknown): RenderableContent {
         }
       }
 
-      const body = typeof (section as Record<string, unknown>).body === 'string'
-        ? (section as Record<string, unknown>).body
+      const body = typeof sectionRecord.body === 'string'
+        ? sectionRecord.body
         : undefined;
-      const title = typeof (section as Record<string, unknown>).title === 'string'
-        ? (section as Record<string, unknown>).title
+      const title = typeof sectionRecord.title === 'string'
+        ? sectionRecord.title
         : undefined;
 
       return {
         id:
-          typeof (section as Record<string, unknown>).id === 'string' &&
-          (section as Record<string, unknown>).id
-            ? ((section as Record<string, unknown>).id as string)
+          typeof sectionRecord.id === 'string' &&
+          sectionRecord.id
+            ? (sectionRecord.id as string)
             : `section-${sectionIndex}`,
         layout,
         title,
