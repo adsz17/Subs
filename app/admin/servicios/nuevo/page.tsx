@@ -74,21 +74,83 @@ export default function NuevoServicio() {
   }
 
   return (
-    <form action={create} className="max-w-lg space-y-3 bg-white p-4 text-black">
+    <form action={create} className="max-w-lg space-y-4 rounded-md bg-white p-4 text-black shadow">
       <h1 className="text-xl font-bold">Nuevo servicio</h1>
-      <input className="border p-2 w-full" name="name" placeholder="Nombre" />
-      <input className="border p-2 w-full" name="slug" placeholder="slug-unico" />
-      <textarea className="border p-2 w-full" name="description" placeholder="Descripción" />
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Contenido enriquecido</label>
+        <label htmlFor="name" className="block text-sm font-medium">
+          Nombre
+        </label>
+        <input
+          id="name"
+          name="name"
+          placeholder="Nombre"
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="slug" className="block text-sm font-medium">
+          Slug
+        </label>
+        <input
+          id="slug"
+          name="slug"
+          placeholder="slug-unico"
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="description" className="block text-sm font-medium">
+          Descripción
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Descripción"
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="content" className="block text-sm font-medium">
+          Contenido enriquecido
+        </label>
         <ContentBuilder name="content" />
       </div>
-      <ImageUploadField folder="services" />
-      <div className="flex gap-2">
-        <input className="border p-2 w-full" name="currency" defaultValue="USD" />
-        <input className="border p-2 w-full" name="amount" type="number" step="0.01" placeholder="Precio" />
+      <div className="space-y-2">
+        <label className="block text-sm font-medium">Imagen</label>
+        <ImageUploadField folder="services" />
       </div>
-      <button className="btn" type="submit">Crear</button>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <label htmlFor="currency" className="block text-sm font-medium">
+            Moneda
+          </label>
+          <input
+            id="currency"
+            name="currency"
+            defaultValue="USD"
+            className="w-full rounded-md border p-2"
+          />
+          <p className="text-xs text-gray-500">Utiliza el código ISO de la divisa (p. ej. USD, EUR).</p>
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="amount" className="block text-sm font-medium">
+            Precio
+          </label>
+          <input
+            id="amount"
+            name="amount"
+            type="number"
+            step="0.01"
+            placeholder="0.00"
+            min="0"
+            className="w-full rounded-md border p-2"
+          />
+          <p className="text-xs text-gray-500">Introduce el precio utilizando punto para los decimales.</p>
+        </div>
+      </div>
+      <button className="btn" type="submit">
+        Crear
+      </button>
     </form>
   );
 }
