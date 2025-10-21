@@ -598,6 +598,14 @@ export function ContentBuilder({ name, defaultValue }: ContentBuilderProps) {
           <button
             type="button"
             className="rounded border px-3 py-1 text-sm"
+            onClick={() => sections.append(createSection('markdown'))}
+            title="Ideal para contenidos largos con sintaxis Markdown"
+          >
+            Añadir markdown
+          </button>
+          <button
+            type="button"
+            className="rounded border px-3 py-1 text-sm"
             onClick={() => sections.append(createSection('cards'))}
           >
             Añadir tarjetas
@@ -610,6 +618,9 @@ export function ContentBuilder({ name, defaultValue }: ContentBuilderProps) {
             Añadir acordeón
           </button>
         </div>
+        <p className="text-xs text-muted-foreground">
+          El bloque Markdown acepta sintaxis Markdown y es ideal para contenidos largos.
+        </p>
         {hasLegacyMarkdown && (
           <div className="rounded border border-amber-400 bg-amber-50 p-3 text-amber-900 text-sm">
             Detectamos contenido previo en Markdown. Puedes migrarlo editando el bloque generado o reemplazándolo por secciones nuevas.
