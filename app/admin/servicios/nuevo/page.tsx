@@ -196,7 +196,42 @@ export default function NuevoServicio() {
         defaultValue={state.values.description}
       />
       <div className="space-y-2">
-        <label className="block text-sm font-medium">Contenido enriquecido</label>
+        <label htmlFor="name" className="block text-sm font-medium">
+          Nombre
+        </label>
+        <input
+          id="name"
+          name="name"
+          placeholder="Nombre"
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="slug" className="block text-sm font-medium">
+          Slug
+        </label>
+        <input
+          id="slug"
+          name="slug"
+          placeholder="slug-unico"
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="description" className="block text-sm font-medium">
+          Descripción
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Descripción"
+          className="w-full rounded-md border p-2"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="content" className="block text-sm font-medium">
+          Contenido enriquecido
+        </label>
         <ContentBuilder name="content" />
       </div>
       <ImageUploadField folder="services" />
@@ -215,7 +250,9 @@ export default function NuevoServicio() {
           defaultValue={state.values.amount}
         />
       </div>
-      <button className="btn" type="submit">Crear</button>
+      <button className="btn" type="submit">
+        Crear
+      </button>
     </form>
   );
 }
