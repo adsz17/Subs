@@ -1,8 +1,19 @@
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 import { env } from '@/env.mjs';
+import { authOptions } from '@/lib/auth';
 import { cloudinary } from '@/lib/cloudinary';
+import { isAdminOrStaff } from '@/lib/rbac';
+import { Role } from '@prisma/client';
 
 export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  const role = (session?.user as { role?: Role | null } | undefined)?.role ?? null;
+
+  if (!session?.user || !isAdminOrStaff(role)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  }
+
   const formData = await req.formData();
   const file = formData.get('file') as File | null;
   const folder = formData.get('folder') as string | undefined;

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useToast } from './Toast';
 import { useFormContext } from 'react-hook-form';
 
@@ -17,6 +18,7 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
   const imageUrlRef = useRef<HTMLInputElement>(null);
   const imagePublicIdRef = useRef<HTMLInputElement>(null);
   const { add } = useToast();
+  const router = useRouter();
   let form: ReturnType<typeof useFormContext> | null = null;
   try {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -45,6 +47,11 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
         method: 'POST',
         body: formData,
       });
+      if (res.status === 403) {
+        add('Debes iniciar sesión o tener permisos para subir imágenes');
+        router.push('/login');
+        return;
+      }
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error');
       if (imageUrlRef.current) imageUrlRef.current.value = data.secure_url;
