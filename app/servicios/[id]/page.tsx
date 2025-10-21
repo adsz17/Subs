@@ -167,7 +167,7 @@ function parseStructuredContent(raw: unknown): RenderableContent {
         resources,
       } satisfies ServiceContentSection;
     })
-    .filter((section): section is ServiceContentSection => Boolean(section));
+    .filter(Boolean) as ServiceContentSection[];
 
   const metadata =
     data.metadata && typeof data.metadata === 'object'
