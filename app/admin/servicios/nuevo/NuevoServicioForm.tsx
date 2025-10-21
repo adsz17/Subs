@@ -1,5 +1,7 @@
 'use client';
 
+import React from 'react';
+
 import { useFormState } from 'react-dom';
 import { ImageUploadField } from '@/components/admin/ImageUploadField';
 import { ContentBuilder } from '@/components/admin/ContentBuilder';
@@ -21,34 +23,6 @@ export function NuevoServicioForm({ action, initialState }: NuevoServicioFormPro
           {state.errors.general}
         </div>
       ) : null}
-      <div>
-        <input
-          className="border p-2 w-full"
-          name="name"
-          placeholder="Nombre"
-          defaultValue={state.values.name}
-        />
-        {state.errors.name ? (
-          <p className="mt-1 text-sm text-red-600">{state.errors.name}</p>
-        ) : null}
-      </div>
-      <div>
-        <input
-          className="border p-2 w-full"
-          name="slug"
-          placeholder="slug-unico"
-          defaultValue={state.values.slug}
-        />
-        {state.errors.slug ? (
-          <p className="mt-1 text-sm text-red-600">{state.errors.slug}</p>
-        ) : null}
-      </div>
-      <textarea
-        className="border p-2 w-full"
-        name="description"
-        placeholder="Descripción"
-        defaultValue={state.values.description}
-      />
       <div className="space-y-2">
         <label htmlFor="name" className="block text-sm font-medium">
           Nombre
@@ -58,7 +32,11 @@ export function NuevoServicioForm({ action, initialState }: NuevoServicioFormPro
           name="name"
           placeholder="Nombre"
           className="w-full rounded-md border p-2"
+          defaultValue={state.values.name}
         />
+        {state.errors.name ? (
+          <p className="mt-1 text-sm text-red-600">{state.errors.name}</p>
+        ) : null}
       </div>
       <div className="space-y-2">
         <label htmlFor="slug" className="block text-sm font-medium">
@@ -69,7 +47,11 @@ export function NuevoServicioForm({ action, initialState }: NuevoServicioFormPro
           name="slug"
           placeholder="slug-unico"
           className="w-full rounded-md border p-2"
+          defaultValue={state.values.slug}
         />
+        {state.errors.slug ? (
+          <p className="mt-1 text-sm text-red-600">{state.errors.slug}</p>
+        ) : null}
       </div>
       <div className="space-y-2">
         <label htmlFor="description" className="block text-sm font-medium">
@@ -80,6 +62,7 @@ export function NuevoServicioForm({ action, initialState }: NuevoServicioFormPro
           name="description"
           placeholder="Descripción"
           className="w-full rounded-md border p-2"
+          defaultValue={state.values.description}
         />
       </div>
       <div className="space-y-2">
