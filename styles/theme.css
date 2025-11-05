@@ -1,13 +1,62 @@
 :root {
+  --color-primary: 258 94% 62%;
+  --color-primary-foreground: 0 0% 100%;
+  --color-secondary: 198 94% 53%;
+  --color-secondary-foreground: 0 0% 100%;
+  --color-accent: 33 94% 58%;
+  --color-ink: 232 32% 12%;
+  --color-muted-ink: 232 16% 38%;
+  --color-surface: 0 0% 100%;
+  --color-surface-muted: 229 58% 97%;
+  --color-background: 223 44% 96%;
+
+  --gradient-page: radial-gradient(circle at 10% 20%, rgba(136, 163, 255, 0.25), transparent 55%),
+    radial-gradient(circle at 90% 10%, rgba(64, 222, 255, 0.22), transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(255, 184, 108, 0.18), transparent 55%),
+    linear-gradient(135deg, #f9fbff 0%, #eef3ff 100%);
+  --gradient-cta: linear-gradient(120deg, hsl(var(--color-primary)) 0%, hsl(var(--color-secondary)) 60%, hsl(var(--color-accent)) 100%);
+  --gradient-card: linear-gradient(160deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 248, 255, 0.75) 100%);
+
   --radius-2xl: 1.5rem;
-  --shadow-soft: 0 4px 24px rgba(0,0,0,0.08);
-  --section-pt: 5rem;
-  --section-pb: 5rem;
+  --shadow-soft: 0 12px 40px rgba(32, 55, 140, 0.12);
+
+  --space-xs: 0.75rem;
+  --space-sm: 1.25rem;
+  --space-md: 2rem;
+  --space-lg: 3rem;
+  --space-xl: 4.5rem;
+
+  --section-pt: var(--space-lg);
+  --section-pb: var(--space-lg);
 }
 
 @media (min-width: 768px) {
   :root {
-    --section-pt: 6rem;
-    --section-pb: 6rem;
+    --space-lg: 4rem;
+    --space-xl: 6rem;
+    --section-pt: var(--space-xl);
+    --section-pb: var(--space-xl);
   }
+}
+
+.dark {
+  --color-primary: 258 96% 72%;
+  --color-primary-foreground: 232 32% 12%;
+  --color-secondary: 197 100% 68%;
+  --color-secondary-foreground: 232 32% 12%;
+  --color-accent: 33 96% 64%;
+  --color-ink: 223 43% 94%;
+  --color-muted-ink: 218 22% 70%;
+  --color-surface: 227 37% 14%;
+  --color-surface-muted: 226 28% 19%;
+  --color-background: 230 35% 10%;
+
+  --gradient-page: radial-gradient(circle at 20% 20%, rgba(111, 77, 246, 0.3), transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(69, 188, 255, 0.25), transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(255, 166, 92, 0.25), transparent 55%),
+    linear-gradient(135deg, #111423 0%, #14172a 100%);
+  --gradient-cta: linear-gradient(120deg, hsl(var(--color-primary)) 0%, hsl(var(--color-secondary)) 70%, hsl(var(--color-accent)) 100%);
+  --gradient-card: linear-gradient(160deg, rgba(28, 33, 61, 0.9) 0%, rgba(19, 23, 41, 0.88) 100%);
+
+  --shadow-soft: 0 20px 45px rgba(13, 16, 32, 0.6);
 }

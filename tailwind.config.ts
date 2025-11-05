@@ -16,6 +16,24 @@ export default {
         sans: ['var(--font-sans)'],
         serif: ['var(--font-display)'],
       },
+      colors: {
+        background: 'hsl(var(--color-background))',
+        surface: {
+          DEFAULT: 'hsl(var(--color-surface))',
+          muted: 'hsl(var(--color-surface-muted))',
+        },
+        primary: {
+          DEFAULT: 'hsl(var(--color-primary))',
+          foreground: 'hsl(var(--color-primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--color-secondary))',
+          foreground: 'hsl(var(--color-secondary-foreground))',
+        },
+        accent: 'hsl(var(--color-accent))',
+        ink: 'hsl(var(--color-ink))',
+        'muted-ink': 'hsl(var(--color-muted-ink))',
+      },
       fontSize: {
         base: '1rem',
         lg: '1.125rem',
@@ -28,6 +46,18 @@ export default {
       },
       boxShadow: {
         soft: 'var(--shadow-soft)',
+      },
+      backgroundImage: {
+        'gradient-brand': 'var(--gradient-page)',
+        'gradient-cta': 'var(--gradient-cta)',
+        'gradient-card': 'var(--gradient-card)',
+      },
+      spacing: {
+        'agency-xs': 'var(--space-xs)',
+        'agency-sm': 'var(--space-sm)',
+        'agency-md': 'var(--space-md)',
+        'agency-lg': 'var(--space-lg)',
+        'agency-xl': 'var(--space-xl)',
       },
     },
   },
