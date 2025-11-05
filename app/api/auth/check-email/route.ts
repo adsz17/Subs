@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
-const schema = z.object({ email: z.string().email() });
+const schema = z.object({ email: z.string().trim().email().toLowerCase() });
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
