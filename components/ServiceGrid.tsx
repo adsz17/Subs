@@ -24,6 +24,7 @@ export interface ServiceGridItem {
   description: string | null;
   category: string;
   icon: IconKey;
+  href?: string;
 }
 
 interface ServiceGridProps {
@@ -87,6 +88,7 @@ export function ServiceGrid({ services, defaultSearch = '', defaultCategory = 'a
               title={service.title}
               description={service.description}
               category={service.category}
+              href={service.href}
             />
           );
         })}
