@@ -51,5 +51,14 @@ const columns: ColumnDef<Purchase>[] = [
 ];
 
 export function ComprasTable({ data }: { data: Purchase[] }) {
-  return <DataTable columns={columns} data={data} />;
+  return (
+    <DataTable
+      columns={columns}
+      data={data}
+      title="Solicitudes de compra"
+      subtitle="Revisa los pagos reportados por los clientes y valida su estado."
+      emptyTitle="Sin compras registradas"
+      emptyDescription="Cuando recibas una nueva transacción aparecerá inmediatamente en este panel."
+    />
+  );
 }
