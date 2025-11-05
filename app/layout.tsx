@@ -1,5 +1,6 @@
 import './globals.css';
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { Playfair_Display, Inter } from 'next/font/google';
 import { baseMetadata } from '@/lib/seo';
 import { SiteHeader } from '@/components/ui/SiteHeader';
@@ -19,12 +20,25 @@ export const metadata = baseMetadata;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-      <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
-        <body className="min-h-screen bg-white text-zinc-900 antialiased dark:bg-gray-950 dark:text-zinc-50">
+    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
+      <body className="min-h-screen antialiased">
+        <div className="relative flex min-h-screen flex-col">
+          <div className="bg-secondary text-secondary-foreground">
+            <div className="container flex h-10 items-center justify-center gap-2 text-xs font-medium md:text-sm">
+              <span className="uppercase tracking-wide">Sesión estratégica gratuita este mes</span>
+              <Link
+                href="/#contacto"
+                className="rounded-full bg-primary/80 px-3 py-1 text-primary-foreground transition hover:bg-primary"
+              >
+                Reserva ahora
+              </Link>
+            </div>
+          </div>
           <SiteHeader />
-          {children}
+          <main className="flex-1 px-4 py-agency-lg md:px-6 lg:px-8">{children}</main>
           <Footer />
-        </body>
-      </html>
-    );
-  }
+        </div>
+      </body>
+    </html>
+  );
+}
