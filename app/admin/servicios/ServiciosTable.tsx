@@ -103,6 +103,10 @@ export function ServiciosTable({ data }: { data: ServiceWithPrices[] }) {
           variant: 'default',
         },
       ]}
+      title="Servicios"
+      subtitle="Gestiona la oferta activa, duplica servicios y actualiza su visibilidad rápidamente."
+      emptyTitle="No se encontraron servicios"
+      emptyDescription="Cambia los filtros aplicados o crea un nuevo servicio para que aparezca aquí."
     />
   );
 }
