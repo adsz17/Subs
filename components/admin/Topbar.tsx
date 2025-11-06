@@ -18,6 +18,8 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { applyThemePreference, detectPreferredTheme, persistThemePreference, readStoredTheme } from "@/lib/theme-client";
+import type { ThemePreference } from "@/lib/theme";
 
 export interface TopbarShortcut {
   label: string;
@@ -34,35 +36,29 @@ interface Props {
 }
 
 export function Topbar({ onMenu, globalSearchValue, onGlobalSearch, shortcuts = [] }: Props) {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<ThemePreference>("light");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState(globalSearchValue);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const themeReady = useRef(false);
   const router = useRouter();
 
   const themeLabel = theme === "light" ? "Modo claro" : "Modo oscuro";
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const storedTheme = window.localStorage.getItem("subs-admin-theme");
-    if (storedTheme === "light" || storedTheme === "dark") {
-      setTheme(storedTheme);
-      return;
-    }
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(prefersDark ? "dark" : "light");
+    const stored = readStoredTheme();
+    const preferred = stored ?? detectPreferredTheme();
+    setTheme(preferred);
+    applyThemePreference(preferred);
+    themeReady.current = true;
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    window.localStorage.setItem("subs-admin-theme", theme);
+    if (!themeReady.current) return;
+    applyThemePreference(theme);
+    persistThemePreference(theme);
   }, [theme]);
 
   useEffect(() => {

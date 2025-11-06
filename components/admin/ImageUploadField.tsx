@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useToast } from './Toast';
 import { useFormContext } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Loader2, Upload } from 'lucide-react';
 
 interface Props {
   folder: string;
@@ -17,6 +19,7 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
   const [uploading, setUploading] = useState(false);
   const imageUrlRef = useRef<HTMLInputElement>(null);
   const imagePublicIdRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { add } = useToast();
   const router = useRouter();
   let form: ReturnType<typeof useFormContext> | null = null;
@@ -26,6 +29,16 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
   } catch {
     form = null;
   }
+
+  useEffect(() => {
+    setPreview(initialUrl ?? null);
+    if (imageUrlRef.current) {
+      imageUrlRef.current.value = initialUrl ?? '';
+    }
+    if (imagePublicIdRef.current) {
+      imagePublicIdRef.current.value = initialPublicId ?? '';
+    }
+  }, [initialUrl, initialPublicId]);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -73,12 +86,26 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
     } catch (err) {
       add('Error al subir la imagen');
     } finally {
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       setUploading(false);
     }
   };
 
+  const handleClear = () => {
+    setPreview(null);
+    if (imageUrlRef.current) imageUrlRef.current.value = '';
+    if (imagePublicIdRef.current) imagePublicIdRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (form) {
+      form.setValue('imageUrl', '', { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+      form.setValue('imagePublicId', '', { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+    }
+  };
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <input ref={imageUrlRef} type="hidden" name="imageUrl" defaultValue={initialUrl ?? ''} />
       <input
         ref={imagePublicIdRef}
@@ -86,11 +113,34 @@ export function ImageUploadField({ folder, initialUrl, initialPublicId }: Props)
         name="imagePublicId"
         defaultValue={initialPublicId ?? ''}
       />
-      {preview && (
-        <Image src={preview} alt="" width={128} height={128} className="mb-2 h-32 w-auto object-contain" />
+      <input ref={fileInputRef} type="file" accept="image/*" className="sr-only" onChange={handleChange} />
+      {preview ? (
+        <div className="overflow-hidden rounded-xl border border-white/20 bg-surface/70 shadow-inner transition dark:border-white/10">
+          <Image src={preview} alt="" width={512} height={320} className="h-48 w-full object-cover" />
+        </div>
+      ) : (
+        <div className="flex h-48 items-center justify-center rounded-xl border border-dashed border-white/30 bg-surface/50 text-sm text-muted-ink/70 transition dark:border-white/15">
+          Aún no has seleccionado una imagen.
+        </div>
       )}
-      <input type="file" accept="image/*" onChange={handleChange} />
-      {uploading && <p>Subiendo...</p>}
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          className="gap-2"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+        >
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          {uploading ? 'Subiendo...' : preview ? 'Cambiar imagen' : 'Subir imagen'}
+        </Button>
+        {preview && (
+          <Button type="button" variant="ghost" className="text-muted-ink hover:text-ink" onClick={handleClear}>
+            Quitar
+          </Button>
+        )}
+      </div>
+      <p className="text-xs text-muted-ink/80">PNG, JPG o WebP. Tamaño máximo de 5MB.</p>
     </div>
   );
 }

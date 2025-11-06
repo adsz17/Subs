@@ -5,6 +5,7 @@ import { Playfair_Display, Inter } from 'next/font/google';
 import { baseMetadata } from '@/lib/seo';
 import { SiteHeader } from '@/components/ui/SiteHeader';
 import { Footer } from '@/components/ui/Footer';
+import { ThemeScript } from '@/components/theme/ThemeScript';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -20,7 +21,10 @@ export const metadata = baseMetadata;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="es" className={`${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="min-h-screen antialiased">
         <div className="relative flex min-h-screen flex-col">
           <div className="bg-secondary text-secondary-foreground">

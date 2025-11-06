@@ -8,6 +8,14 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
 body {
   font-family: var(--font-sans);
   color: hsl(var(--color-ink));
@@ -70,4 +78,19 @@ input[type='submit']:active {
 
 .bg-surface-glass {
   background-image: var(--gradient-card);
+}
+
+.glass-panel {
+  border-radius: var(--radius-2xl);
+  border: 1px solid hsl(var(--color-muted-ink) / 0.18);
+  background-color: hsl(var(--color-surface) / 0.82);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(24px);
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.dark .glass-panel {
+  border-color: hsl(var(--color-muted-ink) / 0.28);
+  background-color: hsl(var(--color-surface-muted) / 0.68);
+  box-shadow: 0 26px 60px rgba(5, 8, 22, 0.55);
 }

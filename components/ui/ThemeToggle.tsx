@@ -1,29 +1,29 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-type Theme = 'light' | 'dark';
+import { applyThemePreference, detectPreferredTheme, persistThemePreference, readStoredTheme } from '@/lib/theme-client';
+import type { ThemePreference } from '@/lib/theme';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<ThemePreference>('light');
+  const initialized = useRef(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) {
-      setTheme(stored);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-    }
+    const stored = readStoredTheme();
+    const preferred = stored ?? detectPreferredTheme();
+    setTheme(preferred);
+    applyThemePreference(preferred);
+    initialized.current = true;
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(theme);
-    localStorage.setItem('theme', theme);
+    if (!initialized.current) return;
+    applyThemePreference(theme);
+    persistThemePreference(theme);
   }, [theme]);
 
-  const toggle = () => setTheme(theme === 'light' ? 'dark' : 'light');
+  const toggle = () => setTheme((current) => (current === 'light' ? 'dark' : 'light'));
 
   return (
     <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
