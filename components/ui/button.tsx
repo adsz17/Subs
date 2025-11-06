@@ -9,17 +9,19 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const baseClasses =
-  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+  'inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold tracking-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-60';
 
 const variants: Record<NonNullable<ButtonProps['variant']>, string> = {
-  default: 'bg-blue-600 text-white hover:bg-blue-700',
-  outline: 'border border-blue-600 text-blue-600 hover:bg-blue-50',
-  ghost: 'text-blue-600 hover:bg-blue-50'
+  default: 'bg-primary text-primary-foreground shadow-soft hover:bg-primary/90',
+  outline:
+    'border border-[hsl(var(--color-muted-ink)/0.28)] bg-[hsl(var(--color-surface)/0.82)] text-ink hover:border-primary/45 hover:bg-[hsl(var(--color-surface)/0.92)] hover:text-primary',
+  ghost:
+    'text-muted-ink hover:text-ink hover:bg-[hsl(var(--color-surface)/0.65)] dark:hover:bg-[hsl(var(--color-surface-muted)/0.55)]'
 };
 
 const sizes: Record<NonNullable<ButtonProps['size']>, string> = {
-  default: 'px-4 py-2',
-  sm: 'px-3 py-1.5',
+  default: 'h-11 px-5',
+  sm: 'h-9 px-4 text-sm',
   icon: 'h-10 w-10'
 };
 
